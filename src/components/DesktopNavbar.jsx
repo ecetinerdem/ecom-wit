@@ -14,10 +14,10 @@ const MobileNavbar = () => {
         <div>
         {isMenuOpen && (
         <div className="mt-4 space-y-2 sm:flex sm:space-y-0 sm:space-x-4">
-          <a href="#" className="block py-2 text-gray-600 hover:text-gray-900">Home</a>
-          <a href="#" className="block py-2 text-gray-600 hover:text-gray-900">Product</a>
-          <a href="#" className="block py-2 text-gray-600 hover:text-gray-900">Pricing</a>
-          <a href="#" className="block py-2 text-gray-600 hover:text-gray-900">Contact</a>
+          <a href="#" className="block py-2 text-[#737373] hover:text-gray-900">Home</a>
+          <a href="#" className="block py-2 text-[#737373] hover:text-gray-900">Product</a>
+          <a href="#" className="block py-2 text-[#737373] hover:text-gray-900">Pricing</a>
+          <a href="#" className="block py-2 text-[#737373] hover:text-gray-900">Contact</a>
         </div>
       )}
         </div>

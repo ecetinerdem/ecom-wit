@@ -17,7 +17,7 @@ const DesktopNavbar = () => {
   return (
     <>
       <div className='h-14 flex justify-around bg-[#252B42] text-white text-[0.7rem]'>
-        <div className='flex items-center gap-8 ml-[-80px]'>
+        <div className='flex items-center gap-4 ml-[-80px]'>
           <div className='font-montserrat font-semibold text-[0.8rem]'>
             <i className="fa-solid fa-phone fa-lg mr-2"></i>(225) 555-0118
           </div>
@@ -25,7 +25,7 @@ const DesktopNavbar = () => {
             <i className="fa-regular fa-envelope fa-lg mr-2"></i>michella@rivera@example.com
           </div>
         </div>
-        <div className='flex items-center text-[0.9rem] font-semibold'>
+        <div className='flex items-center text-[0.9rem] font-semibold mr-20'>
           <p>Follow Us and get a chance to win 80% off</p>
         </div>
         <div className='flex items-center gap-2'>
@@ -39,7 +39,7 @@ const DesktopNavbar = () => {
       <nav className="bg-white p-4 shadow-md">
         <div className="flex justify-between items-center">
           <div className="text-xl font-bold ml-8">Bandage</div>
-          <div>
+          <div className='mr-32'>
             {isMenuOpen && (
               <div className="mt-4 space-y-2 sm:flex sm:space-y-0 sm:space-x-4">
                 <a href="#" className="block py-2 text-[#737373] font-bold hover:text-gray-900">Home</a>
@@ -96,10 +96,12 @@ const DesktopNavbar = () => {
               </div>
             )}
           </div>
-          <div className="flex items-center space-x-4">
-            <i className="fa-regular fa-user"></i>
+          <div className="flex items-center  gap-10 text-[#23A6F0]">
+            <div className=''><i className="fa-regular fa-user mr-2"></i> <span className='font-bold'>Login / Register</span></div>
+            
             <i className="fa-solid fa-magnifying-glass"></i>
             <i className="fa-solid fa-cart-shopping"></i>
+            <i className="fa-regular fa-heart"></i>
             <button onClick={toggleMenu} className="focus:outline-none">
               <i className="fa-solid fa-bars sm:hidden"></i>
             </button>

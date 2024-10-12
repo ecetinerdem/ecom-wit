@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const items = [
   {
-    src: 'https://picsum.photos/id/123/1200/400',
+    src: '../public/images/hero.jpeg',
     altText: 'Slide 1',
     caption: 'Slide 1',
     key: 1,
@@ -52,7 +52,7 @@ function CarouselSlider() {
         <img
           src={item.src}
           alt={item.altText}
-          className="w-full h-full object-cover"
+          className="w-[110%] h-[85%] object-cover md:h-[104%]"
         />
         {/* Caption and Call to Action */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 gap-2 
@@ -92,7 +92,7 @@ function CarouselSlider() {
       </button>
 
       {/* Rectangle Indicators */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex">
+      <div className="absolute bottom-36 md:bottom-4 left-1/2 transform -translate-x-1/2 flex">
         {items.map((_, index) => (
           <button
             key={index}

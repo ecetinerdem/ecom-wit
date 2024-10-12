@@ -25,10 +25,10 @@ const DesktopNavbar = () => {
             <i className="fa-regular fa-envelope fa-lg mr-2"></i>michella@rivera@example.com
           </div>
         </div>
-        <div className='flex items-center text-[0.9rem] font-semibold mr-20'>
+        <div className='flex items-center text-[0.9rem] font-semibold mr-4'>
           <p>Follow Us and get a chance to win 80% off</p>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-4 ml-32'>
           <p className='text-[0.8rem] font-semibold'>Follow us :</p>
           <i className="fa-brands fa-instagram fa-lg"></i>
           <i className="fa-brands fa-youtube fa-lg"></i>

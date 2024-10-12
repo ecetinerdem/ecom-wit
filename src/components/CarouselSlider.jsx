@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import heroImage from '../assets/images/hero.jpeg';
 
 const items = [
   {
-    src: '../public/images/hero.jpeg',
+    src: heroImage,
     altText: 'Slide 1',
     caption: 'Slide 1',
     key: 1,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Card = ({ categoryImages }) => {
+const CategoriesCard = ({ categoryImages }) => {
   return (
     <div className='md:mt-12 md:flex-col'>
       <div className='flex flex-col items-center mb-8 md:mb-0'>
@@ -68,4 +68,4 @@ const Card = ({ categoryImages }) => {
   );
 };
 
-export default Card;
+export default CategoriesCard;

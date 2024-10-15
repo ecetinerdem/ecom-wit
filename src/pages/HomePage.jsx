@@ -4,6 +4,7 @@ import CarouselSlider from '../components/CarouselSlider'
 
 
 import Categories from '../components/Categories'
+import Products from '../components/Products'
 
 function HomePage() {
   return (
@@ -11,6 +12,7 @@ function HomePage() {
       <Navbar />
       <CarouselSlider/>
       <Categories />
+      <Products />
       
     </div>
   )

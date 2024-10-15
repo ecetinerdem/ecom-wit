@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import heroImage from '../assets/images/hero.jpeg';
 import heroTwo from '../assets/images/heroTwo.png';
-import CallToAction from './CallToAction'; // Import the new component
+import CallToAction from './CallToAction';
 
 const items = [
   {
@@ -37,7 +37,7 @@ const items = [
   },
 ];
 
-function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
+function HeroSlider({ startIndex = 0 }) {
   const [activeIndex, setActiveIndex] = useState(startIndex);
   const [animating, setAnimating] = useState(false);
 
@@ -65,12 +65,6 @@ function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
         className={`absolute inset-0 transition-opacity duration-1000 ${activeIndex === index ? 'opacity-100' : 'opacity-0'}`}
         onTransitionEnd={() => setAnimating(false)}
       >
-        <img
-          src={item.src}
-          alt={item.altText}
-          className="w-[110%] h-[85%] object-cover md:h-[104%]"
-        />
-        
         {/* Use CallToAction component */}
         <CallToAction
           season={item.season}
@@ -78,12 +72,20 @@ function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
           description={item.description}
           buttonText={item.buttonText}
         />
+        {/* Add different Tailwind CSS styles based on starting index */}
+        <img
+          src={item.src}
+          alt={item.altText}
+          className={`w-[110%] h-[85%] object-cover md:h-[104%] ${startIndex === 1 ? 'w-[50%] bg-[#23856D]' : '' /* Write your custom styles here for index 1 */}`}
+        />
+        
+
       </div>
     );
   });
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className={`relative w-full h-screen overflow-hidden ${startIndex === 1 ? '' : '' /* Write your custom styles here for the slider container when startIndex is 1 */}`}>
       <div className="relative h-full">
         {slides}
       </div>

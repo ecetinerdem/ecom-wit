@@ -10,7 +10,7 @@ const Card = ({ categoryImages }) => {
             <p className='text-[#737373] text-xs'>the conflict between</p>
         </div>
       </div>
-      <div className="w-full bg-white flex justify-center items-center overflow-x-hidden md:w-[100%] md:h-[80vh]">
+      <div className="w-full bg-white flex justify-center items-center overflow-x-hidden md:h-[80vh]">
         <div className="w-[85%] flex flex-col md:flex-row md:justify-center md:gap-6 md:mt-[-80px]">
           {/* First column */}
           <div 

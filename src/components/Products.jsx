@@ -22,7 +22,12 @@ const products = [
 
 const Products = () => {
   return (
-    <div className="w-full">
+    <div className="w-full mt-20 md:mt-0 flex flex-col justify-center items-center">
+      <div className='w-2/5 flex flex-col text-center justify-center items-center '>
+        <h4 className='text-[#737373] text-lg font-semibold'>Featured Products</h4>
+        <h3 className='font-montserrat text-[#252B42] font-bold text-lg'>BESTSELLER PRODUCTS</h3>
+        <p className='text-[#737373] text-xs'>Problems trying to resolve the conflict between</p>
+      </div>
       {/* Parent div */}
       <div className="w-[85%] mx-auto mt-8 md:mt-8">
         {/* Grid for the products */}

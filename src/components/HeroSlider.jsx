@@ -1,5 +1,8 @@
+// HeroSlider.js
 import React, { useState } from 'react';
 import heroImage from '../assets/images/hero.jpeg';
+import heroTwo from '../assets/images/heroTwo.png';
+import CallToAction from './CallToAction'; // Import the new component
 
 const items = [
   {
@@ -7,23 +10,35 @@ const items = [
     altText: 'Slide 1',
     caption: 'Slide 1',
     key: 1,
+    season: 'Summer 2020',
+    title: 'NEW COLLECTION',
+    description: 'We know how large objects will act, but things on a small scale.',
+    buttonText: 'Shop Now',
   },
   {
-    src: 'https://picsum.photos/id/456/1200/400',
+    src: heroTwo,
     altText: 'Slide 2',
     caption: 'Slide 2',
     key: 2,
+    season: 'Autumn 2020',
+    title: 'EXCLUSIVE SALE',
+    description: 'The finest items at great prices.',
+    buttonText: 'Explore',
   },
   {
     src: 'https://picsum.photos/id/678/1200/400',
     altText: 'Slide 3',
     caption: 'Slide 3',
     key: 3,
+    season: 'Winter 2020',
+    title: 'LIMITED EDITION',
+    description: 'Discover unique pieces for the season.',
+    buttonText: 'Discover Now',
   },
 ];
 
-function CarouselSlider() {
-  const [activeIndex, setActiveIndex] = useState(0);
+function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
+  const [activeIndex, setActiveIndex] = useState(startIndex);
   const [animating, setAnimating] = useState(false);
 
   const next = () => {
@@ -55,19 +70,14 @@ function CarouselSlider() {
           alt={item.altText}
           className="w-[110%] h-[85%] object-cover md:h-[104%]"
         />
-        {/* Caption and Call to Action */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 gap-2 
-                        md:items-start md:text-left md:justify-end
-                        md:left-[15%] md:bottom-[25%]">
-          <p className="text-white text-sm tracking-wide uppercase">Summer 2020</p>
-          <h2 className="text-5xl font-bold text-white mt-2 max-w-xs md:max-w-md lg:max-w-lg">NEW COLLECTION</h2>
-          <p className="text-white mt-4 max-w-xs md:max-w-sm lg:max-w-md">
-            We know how large objects will act, but things on a small scale.
-          </p>
-          <button className="mt-4 px-8 py-2.5 bg-[#2DC071] text-white font-bold uppercase hover:bg-[#2DC071] transition-all">
-            Shop Now
-          </button>
-        </div>
+        
+        {/* Use CallToAction component */}
+        <CallToAction
+          season={item.season}
+          title={item.title}
+          description={item.description}
+          buttonText={item.buttonText}
+        />
       </div>
     );
   });
@@ -106,4 +116,4 @@ function CarouselSlider() {
   );
 }
 
-export default CarouselSlider;
+export default HeroSlider;

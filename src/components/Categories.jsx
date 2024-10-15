@@ -3,7 +3,7 @@ import bigManImage from '../assets/images/bigMan.jpeg';
 import bigWomanImage from '../assets/images/bigWoman.jpeg';
 import accessories from '../assets/images/accessories.jpeg';
 import kids from '../assets/images/kids.jpeg';
-import Card from './Card';
+import CategoriesCard from './CategoriesCard';
 
 const Categories = () => {
   const categoryImages = [
@@ -13,7 +13,7 @@ const Categories = () => {
     { id: 4, image: kids, alt: 'KIDS' },
   ];
 
-  return <Card categoryImages={categoryImages} />;
+  return <CategoriesCard categoryImages={categoryImages} />;
 };
 
 export default Categories;

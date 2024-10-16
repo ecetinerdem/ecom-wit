@@ -1,8 +1,7 @@
-// HeroSlider.js
 import React, { useState } from 'react';
 import heroImage from '../assets/images/hero.jpeg';
-import heroTwo from '../assets/images/heroTwo.png';
-import CallToAction from './CallToAction'; // Import the new component
+import heroTwo from '../assets/images/heroTwo.jpg';
+import CallToAction from './CallToAction';
 
 const items = [
   {
@@ -20,10 +19,11 @@ const items = [
     altText: 'Slide 2',
     caption: 'Slide 2',
     key: 2,
-    season: 'Autumn 2020',
-    title: 'EXCLUSIVE SALE',
-    description: 'The finest items at great prices.',
-    buttonText: 'Explore',
+    season: 'Summer 2020',
+    title: 'Vita Classic Product',
+    description: 'We know how large objects will act, but things on a small scale.',
+    price:'16.48',
+    buttonText: 'Add to Cart',
   },
   {
     src: 'https://picsum.photos/id/678/1200/400',
@@ -68,7 +68,7 @@ function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
         <img
           src={item.src}
           alt={item.altText}
-          className="w-[110%] h-[85%] object-cover md:h-[104%]"
+          className="w-[110%] h-[90%] object-cover md:h-[104%]"
         />
         
         {/* Use CallToAction component */}
@@ -77,6 +77,7 @@ function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
           title={item.title}
           description={item.description}
           buttonText={item.buttonText}
+          price={item.price}
         />
       </div>
     );

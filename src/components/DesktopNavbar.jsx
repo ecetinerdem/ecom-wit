@@ -59,7 +59,7 @@ const DesktopNavbar = () => {
                     </svg>
                   </button>
                   {isShopOpen && (
-                    <div className="absolute left-0 mt-2 w-96 bg-white border border-gray-200 rounded-md shadow-lg">
+                    <div className="absolute left-0 mt-2 w-96 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                       <div className="flex gap-4">
                         <div className="w-1/2 py-1 px-2">
                           <p className="px-2 py-2 text-sm font-bold text-gray-700 mb-4">Kadin</p>
@@ -96,9 +96,8 @@ const DesktopNavbar = () => {
               </div>
             )}
           </div>
-          <div className="flex items-center  gap-10 text-[#23A6F0]">
+          <div className="flex items-center gap-10 text-[#23A6F0]">
             <div className=''><i className="fa-regular fa-user mr-2"></i> <span className='font-bold'>Login / Register</span></div>
-            
             <i className="fa-solid fa-magnifying-glass"></i>
             <i className="fa-solid fa-cart-shopping"></i>
             <i className="fa-regular fa-heart"></i>

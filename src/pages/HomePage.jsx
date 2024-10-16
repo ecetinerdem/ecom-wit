@@ -9,7 +9,6 @@ function HomePage() {
   return (
     <div>
       <Navbar />
-      
       <HeroSlider />
       <Categories />
       <Products />

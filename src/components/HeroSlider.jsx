@@ -104,7 +104,7 @@ function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
       </button>
 
       {/* Rectangle Indicators */}
-      <div className="absolute bottom-36 md:bottom-4 left-1/2 transform -translate-x-1/2 flex">
+      <div className="absolute bottom-24 md:bottom-4 left-1/2 transform -translate-x-1/2 flex">
         {items.map((_, index) => (
           <button
             key={index}

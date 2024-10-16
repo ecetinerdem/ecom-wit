@@ -1,7 +1,6 @@
-// HeroSlider.js
 import React, { useState } from 'react';
 import heroImage from '../assets/images/hero.jpeg';
-import heroTwo from '../assets/images/heroTwo.png';
+import heroTwo from '../assets/images/heroTwo.jpg';
 import CallToAction from './CallToAction';
 
 const items = [
@@ -20,10 +19,11 @@ const items = [
     altText: 'Slide 2',
     caption: 'Slide 2',
     key: 2,
-    season: 'Autumn 2020',
-    title: 'EXCLUSIVE SALE',
-    description: 'The finest items at great prices.',
-    buttonText: 'Explore',
+    season: 'Summer 2020',
+    title: 'Vita Classic Product',
+    description: 'We know how large objects will act, but things on a small scale.',
+    price:'16.48',
+    buttonText: 'Add to Cart',
   },
   {
     src: 'https://picsum.photos/id/678/1200/400',
@@ -37,7 +37,7 @@ const items = [
   },
 ];
 
-function HeroSlider({ startIndex = 0 }) {
+function HeroSlider({ startIndex = 0 }) {  // Default start index at 0
   const [activeIndex, setActiveIndex] = useState(startIndex);
   const [animating, setAnimating] = useState(false);
 
@@ -65,27 +65,26 @@ function HeroSlider({ startIndex = 0 }) {
         className={`absolute inset-0 transition-opacity duration-1000 ${activeIndex === index ? 'opacity-100' : 'opacity-0'}`}
         onTransitionEnd={() => setAnimating(false)}
       >
+        <img
+          src={item.src}
+          alt={item.altText}
+          className="w-[110%] h-[90%] object-cover md:h-[104%]"
+        />
+        
         {/* Use CallToAction component */}
         <CallToAction
           season={item.season}
           title={item.title}
           description={item.description}
           buttonText={item.buttonText}
+          price={item.price}
         />
-        {/* Add different Tailwind CSS styles based on starting index */}
-        <img
-          src={item.src}
-          alt={item.altText}
-          className={`w-[110%] h-[85%] object-cover md:h-[104%] ${startIndex === 1 ? 'w-[50%] bg-[#23856D]' : '' /* Write your custom styles here for index 1 */}`}
-        />
-        
-
       </div>
     );
   });
 
   return (
-    <div className={`relative w-full h-screen overflow-hidden ${startIndex === 1 ? '' : '' /* Write your custom styles here for the slider container when startIndex is 1 */}`}>
+    <div className="relative w-full h-screen overflow-hidden">
       <div className="relative h-full">
         {slides}
       </div>

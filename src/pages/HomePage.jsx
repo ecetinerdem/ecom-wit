@@ -3,7 +3,7 @@ import Navbar from '../utils/Navbar';
 import Categories from '../components/Categories';
 import Products from '../components/Products';
 import HeroSlider from '../components/HeroSlider';
-import SecondSlider from '@/components/SecondSlider';
+
 
 function HomePage() {
   return (

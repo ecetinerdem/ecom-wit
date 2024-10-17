@@ -65,7 +65,7 @@ const FeaturedPosts = () => {
               <p className="text-sm text-gray-600 mb-4">{post.description}</p>
               <div className="flex justify-between items-center text-sm text-gray-500">
                 <span className="flex items-center gap-1"><i className="fa-regular fa-clock fa-xs text-[#8EC2F2] mt-1"></i>{post.date}</span>
-                <span className="flex items-center gap-1"><i className="fa-solid fa-chart-line fa-xs text-[#8EC2F2] mt-1"></i>{post.comments} comments</span>
+                <span className="flex items-center gap-1"><i className="fa-solid fa-chart-line fa-xs text-[#23856D] mt-1"></i>{post.comments} comments</span>
               </div>
               <button className="mt-4 text-sm text-blue-500 text-left flex items-center gap-2"> {/* Align Learn More to the left */}
                 Learn More<i className="fa-solid fa-arrow-right fa-xs text-[#8EC2F2] mt-1"></i>

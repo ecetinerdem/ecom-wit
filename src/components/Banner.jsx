@@ -1,7 +1,20 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button } from "@/components/ui/button"
 import banner from '../assets/images/banner.png';
+import { toast } from 'react-toastify';
 
-const Banner = () => {
+const Banner = ({ history }) => {
+  const handleBuyNow = () => {
+    history.push('/shop');
+    toast.success('Redirecting to shop page!');
+  };
+
+  const handleReadMore = () => {
+    history.push('/product');
+    toast.success('Redirecting to product details!');
+  };
+
   return (
     <div className="w-full overflow-hidden">
       <div className="flex flex-col md:flex-row md:gap-4">
@@ -21,12 +34,21 @@ const Banner = () => {
             We know how large objects will act, but things on a small scale.
           </h4>
           <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
-            <button className="bg-blue-400 md:bg-green-500 text-white px-4 py-2 rounded">
+            <Button 
+              size="lg" 
+              className="bg-blue-400 md:bg-green-500 text-white px-4 py-2 rounded"
+              onClick={handleBuyNow}
+            >
               BUY NOW
-            </button>
-            <button className="border border-blue-400 md:border-green-500 text-blue-400 md:text-green-500 px-4 py-2 rounded">
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border border-blue-400 md:border-green-500 text-blue-400 md:text-green-500 px-4 py-2 rounded"
+              onClick={handleReadMore}
+            >
               READ MORE
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -34,4 +56,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default withRouter(Banner);

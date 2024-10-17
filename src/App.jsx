@@ -2,6 +2,7 @@
 import { Route, Switch } from 'react-router-dom/cjs/react-router-dom.min'
 import { Bounce, ToastContainer } from 'react-toastify'
 import HomePage from './pages/HomePage'
+import ShopPage from './pages/ShopPage'
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     <>
       <Switch>
         <Route path="/" exact component={HomePage} />
+        <Route path="/shop" component={ShopPage} />
         {/* You can define more routes here */}
       </Switch>
       <ToastContainer

@@ -1,8 +1,11 @@
+import Navbar from '@/utils/Navbar'
 import React from 'react'
 
 function Header() {
   return (
-    <div>Header</div>
+    <>
+      <Navbar />
+    </>
   )
 }
 

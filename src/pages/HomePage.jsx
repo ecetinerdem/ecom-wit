@@ -5,6 +5,7 @@ import Products from '../components/Products';
 import HeroSlider from '../components/HeroSlider';
 import Banner from '@/components/Banner';
 import FeaturedPosts from '@/components/FeaturedPosts';
+import Footer from '@/layouts/Footer';
 
 
 function HomePage() {
@@ -17,6 +18,7 @@ function HomePage() {
       <HeroSlider startIndex={1} />
       <Banner />
       <FeaturedPosts />
+      <Footer />
     </div>
   );
 }

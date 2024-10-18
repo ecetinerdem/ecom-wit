@@ -1,5 +1,6 @@
 // src/components/Products.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 import products from '../data/productsData';
 
 const Products = () => {
@@ -16,27 +17,29 @@ const Products = () => {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <div key={product.id} className="">
-              <img 
-                src={product.imageUrl} 
-                alt={product.title} 
-                className="w-full h-98 object-cover mb-4 md:h-85" 
-              /> {/* Taller image height for mobile (h-96) */}
-              <h3 className="text-lg font-bold text-center">{product.title}</h3>
-              <p className="text-sm text-[#BDBDBD] text-center">{product.department}</p>
-              <div className="mt-2 flex justify-center gap-2">
-                <span className="line-through text-[#BDBDBD]">${product.price} </span>
-                <span className="text-[#23856D]"> ${product.salePrice}</span>
-              </div>
-                            {/* Color options */}
-                            <div className="mt-4 flex justify-center space-x-2">
-                {product.colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: color }}
-                  ></div>
-                ))}
-              </div>
+              <Link to={`/product/${product.id}`}>
+                <img 
+                  src={product.imageUrl} 
+                  alt={product.title} 
+                  className="w-full h-98 object-cover mb-4 md:h-85" 
+                />
+                <h3 className="text-lg font-bold text-center">{product.title}</h3>
+                <p className="text-sm text-[#BDBDBD] text-center">{product.department}</p>
+                <div className="mt-2 flex justify-center gap-2">
+                  <span className="line-through text-[#BDBDBD]">${product.price} </span>
+                  <span className="text-[#23856D]"> ${product.salePrice}</span>
+                </div>
+                {/* Color options */}
+                <div className="mt-4 flex justify-center space-x-2">
+                  {product.colors.map((color, index) => (
+                    <div
+                      key={index}
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: color }}
+                    ></div>
+                  ))}
+                </div>
+              </Link>
             </div>
           ))}
         </div>

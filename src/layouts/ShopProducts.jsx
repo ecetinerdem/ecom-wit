@@ -48,7 +48,7 @@ const ShopProducts = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="w-full mt-20  flex flex-col justify-center items-center mb-16">
+    <div className="w-full mt-4  flex flex-col justify-center items-center mb-16">
       {/* Parent div */}
       <div className="w-[85%] mx-auto mt-8 md:mt-8">
         {/* Grid for the products */}

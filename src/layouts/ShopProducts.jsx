@@ -1,5 +1,5 @@
-// ShopProducts.js
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for routing
 import products from '../data/productsData'; 
 
 const ShopProducts = () => {
@@ -22,17 +22,19 @@ const ShopProducts = () => {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {currentProducts.map((product) => (
             <div key={product.id} className="">
-              <img 
-                src={product.imageUrl} 
-                alt={product.title} 
-                className="w-full h-98 object-cover mb-4 md:h-85" 
-              />
-              <h3 className="text-lg font-bold text-center">{product.title}</h3>
-              <p className="text-sm text-[#BDBDBD] text-center">{product.department}</p>
-              <div className="mt-2 flex justify-center gap-2">
-                <span className="line-through text-[#BDBDBD]">${product.price} </span>
-                <span className="text-[#23856D]"> ${product.salePrice}</span>
-              </div>
+              <Link to={`/products/${product.id}`}> {/* Link to product detail page */}
+                <img 
+                  src={product.imageUrl} 
+                  alt={product.title} 
+                  className="w-full h-98 object-cover mb-4 md:h-85" 
+                />
+                <h3 className="text-lg font-bold text-center">{product.title}</h3>
+                <p className="text-sm text-[#BDBDBD] text-center">{product.department}</p>
+                <div className="mt-2 flex justify-center gap-2">
+                  <span className="line-through text-[#BDBDBD]">${product.price} </span>
+                  <span className="text-[#23856D]"> ${product.salePrice}</span>
+                </div>
+              </Link>
               {/* Color options */}
               <div className="mt-4 flex justify-center space-x-2">
                 {product.colors.map((color, index) => (

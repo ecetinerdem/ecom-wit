@@ -15,8 +15,16 @@ const shopItems = [
 
 const ShopCards = () => {
   return (
-    <div className="container mx-auto px-4 md:px-24 mt-4">
-      <h1 className="text-3xl font-bold mb-4">Shop</h1>
+    <div className="container mx-auto px-4 md:px-24 mt-4 bg-[#FAFAFA] pb-8">
+      <div className='flex flex-col md:flex-row md:justify-between text-center'>
+      <h4 className="text-3xl font-bold mb-4">Shop</h4>
+      <div className='flex text-center justify-center  gap-2 md:flex-row'>
+      <h6 className='text-[#252B42] font-bold'>Home</h6>
+      <h6 className='text-[#BDBDBD] font-bold'>&gt;</h6>
+      <h6 className='text-[#BDBDBD] font-bold'>Shop</h6>
+      </div>
+
+      </div>
       <div className="flex flex-col md:flex-row md:flex-wrap md:justify-center"> {/*TODO:Cards needs to be closer*/}
         {shopItems.map((item) => (
           <div key={item.id} className="w-full md:w-1/3 lg:w-1/4 xl:w-1/5 md:px-1 mb-4">

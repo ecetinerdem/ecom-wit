@@ -17,7 +17,7 @@ const Products = () => {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <div key={product.id} className="">
-              <Link to={`/product/${product.id}`}>
+              <Link to={`/products/${product.id}`}>
                 <img 
                   src={product.imageUrl} 
                   alt={product.title} 

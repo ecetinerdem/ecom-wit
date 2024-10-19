@@ -124,7 +124,7 @@ function ProductDetail() {
             <button className="bg-[#23A6F0] text-white py-3 px-6 rounded">Select Options</button>
             <div className="flex space-x-4">
               {[Heart, ShoppingCart, Eye].map((Icon, index) => (
-                <button key={index} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <button key={index} className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center">
                   <Icon size={20} className="text-gray-500" />
                 </button>
               ))}

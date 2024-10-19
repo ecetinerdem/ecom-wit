@@ -5,7 +5,7 @@ import Header from '@/layouts/Header';
 import Brands from '@/components/Brands';
 import Footer from '@/layouts/Footer';
 import ProductPageContent from '@/layouts/ProductPageContent';
-import ProductDetail from '@/components/ProductDetail';
+
 
 const ProductDetailPage = () => {
   const { id } = useParams(); // Get the product ID from the URL

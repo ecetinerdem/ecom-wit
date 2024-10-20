@@ -5,7 +5,7 @@ import products from '../data/productsData';
 
 const Products = () => {
   return (
-    <div className="w-full mt-20 md:mt-[-80px] flex flex-col justify-center items-center mb-16">
+    <div className="w-full mt-16 md:mt-[-80px] flex flex-col justify-center items-center mb-16">
       <div className='w-2/5 flex flex-col text-center justify-center items-center gap-2 '>
         <h4 className='text-[#737373] text-lg font-semibold'>Featured Products</h4>
         <h3 className='font-montserrat text-[#252B42] font-bold text-lg'>BESTSELLER PRODUCTS</h3>

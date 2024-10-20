@@ -1,5 +1,6 @@
 import BannerTwo from '@/components/BannerTwo'
 import ProductDetail from '@/components/ProductDetail'
+import Products from '@/components/Products'
 import React from 'react'
 
 function ProductPageContent() {
@@ -7,6 +8,7 @@ function ProductPageContent() {
     <div className='bg-[#FAFAFA]'>
         <ProductDetail />
         <BannerTwo />
+        <Products />
     </div>
   )
 }

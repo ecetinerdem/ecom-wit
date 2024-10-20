@@ -6,7 +6,7 @@ const BannerTwo = () => {
   const product = products[0]; // Example: Get the first product data
 
   return (
-    <main className="flex flex-col w-full p-4 md:p-8 bg-[#FFFFFF]">
+    <main className="flex flex-col w-full p-4 md:pt-8 bg-[#FFFFFF] md:mb-28">
       {/* Div A - Text Section */}
       <div className="flex flex-row justify-center gap-4 md:gap-8 items-center mb-4 text-[#737373]">
         <h6 className="text-xs md:text-md font-semibold md:font-bold mb-2 md:mb-0">Description</h6>

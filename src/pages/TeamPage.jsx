@@ -2,6 +2,11 @@ import React from 'react';
 import productOwner from '../assets/images/productOwner.jpeg';
 import scrumMaster from '../assets/images/scrumMaster.jpeg';
 import full from '../assets/images/full.jpg';
+import fullOne from '../assets/images/fullOne.jpeg';
+import fullTwo from '../assets/images/fullTwo.jpeg';
+import frontEndOne from '../assets/images/frontEndOne.jpeg';
+import frontEndTwo from '../assets/images/frontEndTwo.jpeg';
+import frontEndThree from '../assets/images/frontEndThree.jpeg';
 
 function TeamPage() {
     const teamMembers = [
@@ -22,27 +27,57 @@ function TeamPage() {
             name: 'Çetin Erdem',
             profession: "Full Stack Developer",
             image: full,
+        },
+        {
+            id: 4,
+            name: 'Ömer Bayram',
+            profession: "Full Stack Developer",
+            image: fullOne,
+        },
+        {
+            id: 5,
+            name: 'Aleyna Şebnem Uçak',
+            profession: "Full Stack Developer",
+            image: fullTwo,
+        },
+        {
+            id: 6,
+            name: 'Ayşen Aydın',
+            profession: "Front End Developer",
+            image: frontEndOne,
+        },
+        {
+            id: 7,
+            name: 'Alperen Mimarlar',
+            profession: "Front End Developer",
+            image: frontEndTwo,
+        },
+        {
+            id: 8,
+            name: 'Nida Türkay',
+            profession: "Front End Developer",
+            image: frontEndThree,
         }
     ];
 
     return (
         <div className="flex flex-col items-center justify-center mt-12 md:mt-24">
             <div className="flex flex-col items-center justify-center text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">Meet Our Team</h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
+                <h2 className="text-3xl font-bold text-[#252B42] mb-2">Meet Our Team</h2>
+                <p className="text-[#737373] max-w-2xl mx-auto">
                     Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics
                 </p>
             </div>
-            <div className="flex flex-wrap justify-center items-center -mx-2">
+            <div className="flex flex-wrap justify-center items-center md:my-16">
                 {teamMembers.map(member => (
-                    <div key={member.id} className="w-full sm:w-1/2 lg:w-1/3 px-2 mb-4">
+                    <div key={member.id} className="w-full sm:w-1/2 md:w-1/4 mb-6">
                         <div className="bg-white overflow-hidden shadow-lg max-w-[280px] mx-auto">
                             <div className="h-[280px] overflow-hidden">
                                 <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                             </div>
                             <div className="p-4">
-                                <h4 className="text-lg font-semibold text-gray-800 text-center">{member.name}</h4>
-                                <p className="text-sm text-gray-600 mb-2 text-center">{member.profession}</p>
+                                <h5 className="text-md font-bold text-[#252B42] text-center">{member.name}</h5>
+                                <h6 className="text-sm font-semibold text-[#737373] mb-2 text-center">{member.profession}</h6>
                                 <div className="flex justify-center space-x-3">
                                     <a href="#" className="text-[#23A6F0] hover:text-blue-700">
                                         <i className="fa-brands fa-github text-lg"></i>

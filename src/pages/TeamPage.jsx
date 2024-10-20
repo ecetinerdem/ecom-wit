@@ -15,48 +15,56 @@ function TeamPage() {
             name: 'Erhan Fırat',
             profession: "Product Owner",
             image: productOwner,
+            github:'https://github.com/Workintech',//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 2,
             name: 'Gökhan Özdemir',
             profession: "Scrum Master",
             image: scrumMaster,
+            github:'https://github.com/gokhanozdemir'//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 3,
             name: 'Çetin Erdem',
             profession: "Full Stack Developer",
             image: full,
+            github:'https://github.com/ecetinerdem'//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 4,
             name: 'Ömer Bayram',
             profession: "Full Stack Developer",
             image: fullOne,
+            github:'https://github.com/obayramer'//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 5,
             name: 'Aleyna Şebnem Uçak',
             profession: "Full Stack Developer",
             image: fullTwo,
+            github:'https://github.com/asebneemu'//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 6,
             name: 'Ayşen Aydın',
             profession: "Front End Developer",
             image: frontEndOne,
+            github:'https://github.com/aysenayydin'//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 7,
             name: 'Alperen Mimarlar',
             profession: "Front End Developer",
             image: frontEndTwo,
+            github:'https://github.com/Replena'//TODO add links to github,Linkedin,Twitter for the team
         },
         {
             id: 8,
             name: 'Nida Türkay',
             profession: "Front End Developer",
             image: frontEndThree,
+            github:'https://github.com/NdaTrky'//TODO add links to github,Linkedin,Twitter for the team
         }
     ];
 

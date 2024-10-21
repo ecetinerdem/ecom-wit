@@ -48,9 +48,9 @@ const MobileNavbar = () => {
           {/* Menu Items */}
           <div className="space-y-6 text-center font-semibold text-4xl mt-8">
             <Link to="/" className="block py-2 text-[#737373] hover:text-gray-900">Home</Link>
-            <Link to="/team" className="block py-2 text-[#737373] hover:text-gray-900">About</Link>
+            <Link to="/about" className="block py-2 text-[#737373] hover:text-gray-900">About</Link>
             <Link to="/shop" className="block py-2 text-[#737373] hover:text-gray-900">Shop</Link>
-            <Link to="/blog" className="block py-2 text-[#737373] hover:text-gray-900">Blog</Link>
+            <Link to="/team" className="block py-2 text-[#737373] hover:text-gray-900">Team</Link>
             <Link to="/contact" className="block py-2 text-[#737373] hover:text-gray-900">Contact</Link>
           </div>
           {/* Social Icons */}

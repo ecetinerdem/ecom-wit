@@ -6,6 +6,7 @@ import BannerAbout from '@/components/BannerAbout'
 import AboutSeperator from '@/utils/AboutSeperator'
 import StatsSeperator from '@/utils/StatSeperator'
 import VideoPlayer from '@/components/VideoPlayer'
+import BannerAboutTwo from '@/components/BannerAboutTwo'
 
 
 
@@ -18,6 +19,7 @@ function AboutPageContent() {
         <VideoPlayer />
         <TeamPage />
         <BrandsText />
+        <BannerAboutTwo />
     </div>
   )
 }

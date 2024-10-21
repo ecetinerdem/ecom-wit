@@ -72,7 +72,7 @@ function TeamPage() {
         <div className="flex flex-col items-center justify-center mt-12 md:mt-24">
             <div className="flex flex-col items-center justify-center text-center mb-12">
                 <h2 className="text-3xl font-bold text-[#252B42] mb-2">Meet Our Team</h2>
-                <p className="text-[#737373] max-w-2xl mx-auto">
+                <p className="text-[#737373] w-64 md:w-1/2">
                     Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics
                 </p>
             </div>

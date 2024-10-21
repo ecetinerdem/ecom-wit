@@ -98,8 +98,8 @@ const DesktopNavbar = () => {
                     </div>
                   )}
                 </div>
-                <Link to="/team" className="block py-2 text-[#737373] font-bold hover:text-gray-900">About</Link>
-                <Link to="/blog" className="block py-2 text-[#737373] font-bold hover:text-gray-900">Blog</Link>
+                <Link to="/about" className="block py-2 text-[#737373] font-bold hover:text-gray-900">About</Link>
+                <Link to="/team" className="block py-2 text-[#737373] font-bold hover:text-gray-900">Team</Link>
                 <Link to="/contact" className="block py-2 text-[#737373] font-bold hover:text-gray-900">Contact</Link>
               </div>
             )}

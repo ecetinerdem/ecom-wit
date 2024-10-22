@@ -1,4 +1,4 @@
-https://ecom-wit.vercel.app/
+https://ecom-wit-dev.vercel.app/
 
 # React + Vite
 

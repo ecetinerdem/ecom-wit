@@ -60,8 +60,11 @@ export const login = (email, password, rememberMe) => {
       if (rememberMe) {
         localStorage.setItem('token', userData.token);
       }
+
+      return userData; // Return the user data
     } catch (error) {
       toast.error('Login failed! Please check your credentials.');
+      throw error; // Re-throw the error so it can be caught in the onSubmit function
     }
   };
 };

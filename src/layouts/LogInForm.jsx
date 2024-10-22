@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { login } from '../store/actions/clientActions';
 import { Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from 'react-toastify'; // Import toast
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,21 +18,21 @@ const LoginForm = () => {
     setIsLoading(true);
     setError('');
     const { email, password, rememberMe } = data;
-    
+  
     try {
       const response = await dispatch(login(email, password, rememberMe));
-      
-      // Check if login was successful based on the response
-      // You might need to adjust this condition based on your login action's response structure
-      if (response && response.success) {
+  
+      // Check if response contains the token or user data
+      if (response && response.token) {
+        toast.success('Login successful!'); // Success toast message
         history.push('/');
       } else {
-        // If login failed but didn't throw an error
         setError('Login failed. Please check your credentials and try again.');
+        toast.error('Login failed. Please check your credentials.'); // Error toast message
       }
     } catch (err) {
-      // Handle any errors thrown during login
       setError(err.response?.data?.message || 'Invalid email or password. Please try again.');
+      toast.error(err.response?.data?.message || 'Invalid email or password.'); // Error toast message
     } finally {
       setIsLoading(false);
     }

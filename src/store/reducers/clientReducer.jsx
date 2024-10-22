@@ -7,7 +7,7 @@ import {
 } from '../actions/clientActions';
 
 const initialState = {
-  user: {},
+  user: {}, // User info will include the avatar
   addressList: [],
   creditCards: [],
   roles: [],
@@ -19,7 +19,7 @@ const initialState = {
 export default function clientReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload }; // User object contains all info
     case SET_ROLES:
       return { ...state, roles: action.payload };
     case SET_THEME:

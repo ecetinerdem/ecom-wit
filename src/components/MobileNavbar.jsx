@@ -3,9 +3,14 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const MobileNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isShopOpen, setIsShopOpen] = useState(false); // Added shop menu state
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleShop = () => {
+    setIsShopOpen(!isShopOpen);
   };
 
   return (
@@ -49,7 +54,16 @@ const MobileNavbar = () => {
           <div className="space-y-6 text-center font-semibold text-4xl mt-8">
             <Link to="/" className="block py-2 text-[#737373] hover:text-gray-900">Home</Link>
             <Link to="/about" className="block py-2 text-[#737373] hover:text-gray-900">About</Link>
-            <Link to="/shop" className="block py-2 text-[#737373] hover:text-gray-900">Shop</Link>
+            <Link to="/shop" className="block py-2 text-[#737373] hover:text-gray-900" onClick={toggleShop}>Shop</Link>
+            {isShopOpen && ( // Show shop submenu if it's open
+              <div className="flex flex-col items-center mt-4">
+                <Link to="/shop/bags" className="block py-2 text-[#737373] hover:text-gray-900">Bags</Link>
+                <Link to="/shop/belts" className="block py-2 text-[#737373] hover:text-gray-900">Belts</Link>
+                <Link to="/shop/cosmetics" className="block py-2 text-[#737373] hover:text-gray-900">Cosmetics</Link>
+                <Link to="/shop/accessories" className="block py-2 text-[#737373] hover:text-gray-900">Accessories</Link>
+                <Link to="/shop/hats" className="block py-2 text-[#737373] hover:text-gray-900">Hats</Link>
+              </div>
+            )}
             <Link to="/team" className="block py-2 text-[#737373] hover:text-gray-900">Team</Link>
             <Link to="/contact" className="block py-2 text-[#737373] hover:text-gray-900">Contact</Link>
           </div>

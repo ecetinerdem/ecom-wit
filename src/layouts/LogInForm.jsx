@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { loginUserThunk } from '@/store/actions/authActions'; // Thunk for handling login
 import md5 from 'md5'; // Used for generating Gravatar hash
 
 const LogInForm = () => {
@@ -18,12 +17,32 @@ const LogInForm = () => {
     formState: { errors },
   } = useForm();
 
+  // Mock login function
+  const mockLogin = (email, password) => {
+    // Mocked users for testing
+    const mockUsers = [
+      { email: 'cetoerdem1@gmail.com', password: 'Password123-' }, // Successful login
+      { email: 'user@example.com', password: 'wrongpassword' },  // Failed login
+    ];
+
+    // Check if the provided email and password match any of the mocked users
+    const user = mockUsers.find(user => user.email === email && user.password === password);
+    
+    // Simulate a successful login response
+    if (user) {
+      return { success: true, user: { email: user.email }, token: 'mockToken' };
+    } else {
+      throw new Error('Invalid email or password');
+    }
+  };
+
   const onSubmit = async (data) => {
     setIsLoading(true);
     const { email, password, rememberMe } = data;
 
     try {
-      const result = await dispatch(loginUserThunk({ email, password }));
+      // Use the mock login function instead of the thunk for testing
+      const result = mockLogin(email, password);
 
       if (result.success) {
         // Save user token if 'Remember Me' is checked
@@ -44,8 +63,6 @@ const LogInForm = () => {
         // Redirect to previous page or home
         const redirectTo = location.state?.from || '/';
         history.push(redirectTo);
-      } else {
-        throw new Error(result.message || 'Login failed');
       }
     } catch (error) {
       toast.error(error.message);

@@ -1,85 +1,51 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import md5 from 'md5'; // Used for generating Gravatar hash
+import { useHistory } from 'react-router-dom';
+import { login } from '../store/actions/clientActions';
+import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const LogInForm = () => {
+const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  // Mock login function
-  const mockLogin = (email, password) => {
-    // Mocked users for testing
-    const mockUsers = [
-      { email: 'cetoerdem1@gmail.com', password: 'Password123-' }, // Successful login
-      { email: 'user@example.com', password: 'wrongpassword' },  // Failed login
-    ];
-
-    // Check if the provided email and password match any of the mocked users
-    const user = mockUsers.find(user => user.email === email && user.password === password);
-    
-    // Simulate a successful login response
-    if (user) {
-      return { success: true, user: { email: user.email }, token: 'mockToken' };
-    } else {
-      throw new Error('Invalid email or password');
-    }
-  };
 
   const onSubmit = async (data) => {
     setIsLoading(true);
+    setError('');
     const { email, password, rememberMe } = data;
-
+    
     try {
-      // Use the mock login function instead of the thunk for testing
-      const result = mockLogin(email, password);
-
-      if (result.success) {
-        // Save user token if 'Remember Me' is checked
-        if (rememberMe) {
-          localStorage.setItem('token', result.token);
-        }
-
-        // Show success toast
-        toast.success('Logged in successfully!', {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-
-        // Redirect to previous page or home
-        const redirectTo = location.state?.from || '/';
-        history.push(redirectTo);
+      const response = await dispatch(login(email, password, rememberMe));
+      
+      // Check if login was successful based on the response
+      // You might need to adjust this condition based on your login action's response structure
+      if (response && response.success) {
+        history.push('/');
+      } else {
+        // If login failed but didn't throw an error
+        setError('Login failed. Please check your credentials and try again.');
       }
-    } catch (error) {
-      toast.error(error.message);
+    } catch (err) {
+      // Handle any errors thrown during login
+      setError(err.response?.data?.message || 'Invalid email or password. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Generate Gravatar URL based on the email
-  const getGravatarUrl = (email) => {
-    const hash = md5(email.trim().toLowerCase());
-    return `https://www.gravatar.com/avatar/${hash}`;
-  };
-
   return (
     <div className="max-w-md mx-auto p-6">
-      <h1 className="text-2xl font-bold text-[#252B42] mb-6">Login</h1>
+      <h1 className="text-2xl text-[#252B42] font-bold mb-6">Login</h1>
+
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Email Field */}
@@ -91,12 +57,14 @@ const LogInForm = () => {
               required: 'Email is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address',
-              },
+                message: 'Invalid email address'
+              }
             })}
             className="w-full p-2 border rounded"
           />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Password Field */}
@@ -104,20 +72,30 @@ const LogInForm = () => {
           <label className="block text-sm text-[#252B42] font-medium mb-1">Password</label>
           <input
             type="password"
-            {...register('password', { required: 'Password is required' })}
+            {...register('password', {
+              required: 'Password is required'
+            })}
             className="w-full p-2 border rounded"
           />
-          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          )}
         </div>
 
-        {/* Remember Me Checkbox */}
+        {/* Remember Me */}
         <div className="flex items-center">
           <input
             type="checkbox"
             {...register('rememberMe')}
-            className="mr-2"
+            id="rememberMe"
+            className="h-4 w-4 text-[#23A6F0] border-gray-300 rounded"
           />
-          <label className="text-sm text-[#252B42] font-medium">Remember Me</label>
+          <label
+            htmlFor="rememberMe"
+            className="ml-2 block text-sm text-[#252B42]"
+          >
+            Remember Me
+          </label>
         </div>
 
         {/* Submit Button */}
@@ -127,7 +105,11 @@ const LogInForm = () => {
             className="w-full p-2 bg-[#23A6F0] text-white rounded hover:bg-blue-500"
             disabled={isLoading}
           >
-            {isLoading ? 'Logging in...' : 'Log In'}
+            {isLoading ? (
+              <Loader2 className="animate-spin inline-block" />
+            ) : (
+              'Login'
+            )}
           </button>
         </div>
       </form>
@@ -135,4 +117,4 @@ const LogInForm = () => {
   );
 };
 
-export default LogInForm;
+export default LoginForm;

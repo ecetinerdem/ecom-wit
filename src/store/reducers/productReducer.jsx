@@ -1,12 +1,12 @@
-// reducers/productReducer.js
+// src/store/reducers/productReducer.js
 const initialState = {
   categories: [],
   productList: [],
   total: 0,
-  limit: 25,      // default limit
-  offset: 0,      // default offset
+  limit: 25,
+  offset: 0,
   filter: '',
-  fetchState: 'NOT_FETCHED' // initial state
+  fetchState: 'NOT_FETCHED',
 };
 
 const productReducer = (state = initialState, action) => {

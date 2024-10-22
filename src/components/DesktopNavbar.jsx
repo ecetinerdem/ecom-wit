@@ -107,7 +107,7 @@ const DesktopNavbar = () => {
           <div className="flex items-center gap-6 mr-4 text-[#23A6F0]">
             <div className='flex gap-4'>
               <Link to="/login" className=''><i className="fa-regular fa-user mr-2"></i> <span className='font-bold'>Login</span></Link> / 
-              <Link to="/register" className='font-bold'> Register</Link>
+              <Link to="/signup" className='font-bold'> Register</Link>
             </div>
 
             <i className="fa-solid fa-magnifying-glass"></i>

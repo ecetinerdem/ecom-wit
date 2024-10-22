@@ -6,6 +6,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import ContactPage from './pages/ContactPage';
 import TeamPage from './pages/TeamPage';
 import AboutPage from './pages/AboutPage';
+import SignUpPage from './pages/SignUpPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/contact" component={ContactPage} />
         <Route path="/team" component={TeamPage} />
         <Route path="/about" component={AboutPage} />
+        <Route path="/signup" component={SignUpPage} />
       </Switch>
       <ToastContainer
         position="top-right"

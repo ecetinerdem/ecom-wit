@@ -57,7 +57,7 @@ const MobileNavbar = () => {
           <div className="flex flex-col items-center gap-4 mt-8 text-[#23A6F0]">
             <div className='flex gap-4'>
               <Link to="/login" className=''><i className="fa-regular fa-user fa-2xl mr-2"></i> <span className='font-normal text-2xl'>Login</span></Link> <span className='font-normal text-2xl'>/</span> 
-              <Link to="/register" className='font-normal text-2xl'> Register</Link>
+              <Link to="/signup" className='font-normal text-2xl'> Register</Link>
             </div>
             <div className='flex flex-col gap-16 mt-10'>
               <i className="fa-solid fa-magnifying-glass fa-2xl"></i>

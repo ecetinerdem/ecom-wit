@@ -1,8 +1,8 @@
-// reducers/shoppingCartReducer.js
+// src/store/reducers/shoppingCartReducer.js
 const initialState = {
   cart: [],
   payment: {},
-  address: {}
+  address: {},
 };
 
 const shoppingCartReducer = (state = initialState, action) => {

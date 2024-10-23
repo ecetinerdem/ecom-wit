@@ -1,6 +1,7 @@
-import axios from 'axios';
+
 import { toast } from 'react-toastify';
 import { getGravatarUrl } from '../../utils/gravatarUtil';
+import api from '../../services/api'; // Import your Axios instance
 
 export const setCurrentUser = (user) => {
   const gravatarUrl = user.email ? getGravatarUrl(user.email) : null;
@@ -9,6 +10,11 @@ export const setCurrentUser = (user) => {
     payload: { ...user, gravatarUrl }
   };
 };
+
+export const clearUser = () => ({
+  type: 'SET_USER',
+  payload: {}, // Clear user data
+});
 
 export const setRoles = (roles) => ({
   type: 'SET_ROLES',
@@ -28,19 +34,19 @@ export const setLanguage = (language) => ({
 export const login = (email, password, rememberMe) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post('https://workintech-fe-ecommerce.onrender.com/login', {
+      const response = await api.post('/login', {
         email,
         password,
       });
 
       const userData = response.data;
-      
+
       // Add Gravatar URL to user data
       const userDataWithGravatar = {
         ...userData,
         gravatarUrl: getGravatarUrl(email)
       };
-      
+
       dispatch(setCurrentUser(userDataWithGravatar));
 
       if (rememberMe) {

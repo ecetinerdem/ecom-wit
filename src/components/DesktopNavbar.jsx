@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { getGravatarUrl } from '../utils/gravatarUtil';
+import { logoutUserThunk } from '../store/actions/authActions';
+import { toast } from 'react-toastify';
 
 const DesktopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   // Get user from Redux store
   const user = useSelector((state) => state.client.user);
@@ -22,6 +27,20 @@ const DesktopNavbar = () => {
   // Handler for image load errors
   const handleImageError = () => {
     setImageError(true);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await dispatch(logoutUserThunk());
+      if (result.success) {
+        toast.success('Logged out successfully');
+        history.push('/login');
+      } else {
+        toast.error('Logout failed');
+      }
+    } catch (error) {
+      toast.error('An error occurred during logout');
+    }
   };
 
   return (
@@ -123,25 +142,31 @@ const DesktopNavbar = () => {
             )}
           </div>
           <div className='flex items-center gap-6 mr-4 text-[#23A6F0]'>
-            {user?.name ? (
-              <div className='flex items-center gap-4'>
-                {!imageError && gravatarUrl ? (
-                  <img
-                    src={gravatarUrl}
-                    alt={`${user.name}'s avatar`}
-                    className='w-8 h-8 rounded-full object-cover'
-                    onError={handleImageError}
-                  />
-                ) : (
-                  <div className='w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center'>
-                    <span className='text-gray-600 text-sm font-bold'>
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-                <span className='font-bold text-[#737373]'>{user.name}</span>
-              </div>
-            ) : (
+          {user?.name ? (
+    <div className='flex items-center gap-4'>
+      {!imageError && gravatarUrl ? (
+        <img
+          src={gravatarUrl}
+          alt={`${user.name}'s avatar`}
+          className='w-8 h-8 rounded-full object-cover'
+          onError={handleImageError}
+        />
+      ) : (
+        <div className='w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center'>
+          <span className='text-gray-600 text-sm font-bold'>
+            {user.name.charAt(0).toUpperCase()}
+          </span>
+        </div>
+      )}
+      <span className='font-bold text-[#737373]'>{user.name}</span>
+      <button 
+        onClick={handleLogout}
+        className='text-[#23A6F0] hover:text-[#1a7ab3] font-bold ml-2'
+      >
+        Logout
+      </button>
+    </div>
+  ) : (
               <div className='flex gap-4'>
                 <Link to='/login'>
                   <i className='fa-regular fa-user mr-2'></i>

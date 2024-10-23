@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { toast } from 'react-toastify'; // For showing error messages
+import { toast } from 'react-toastify';
+import { getGravatarUrl } from '../../utils/gravatarUtil';
 
-export const setCurrentUser = (user) => ({
-  type: 'SET_USER',
-  payload: user,
-});
+export const setCurrentUser = (user) => {
+  const gravatarUrl = user.email ? getGravatarUrl(user.email) : null;
+  return {
+    type: 'SET_USER',
+    payload: { ...user, gravatarUrl }
+  };
+};
 
 export const setRoles = (roles) => ({
   type: 'SET_ROLES',
@@ -21,31 +25,6 @@ export const setLanguage = (language) => ({
   payload: language,
 });
 
-// Thunk to fetch roles if not already fetched
-export const fetchRolesIfNeeded = () => {
-  return async (dispatch, getState) => {
-    const { client } = getState();
-    
-    if (!client.roles.length) {
-      try {
-        
-        const response = await axios.get('https://workintech-fe-ecommerce.onrender.com/roles');
-        
-        
-        dispatch(setRoles(response.data));
-      } catch (error) {
-        console.error('Failed to fetch roles:', error);
-      }
-    }
-  };
-};
-
-
-
-
-// actions/clientActions.js
-
-
 export const login = (email, password, rememberMe) => {
   return async (dispatch) => {
     try {
@@ -55,16 +34,23 @@ export const login = (email, password, rememberMe) => {
       });
 
       const userData = response.data;
-      dispatch(setCurrentUser(userData)); // Use the renamed action creator
+      
+      // Add Gravatar URL to user data
+      const userDataWithGravatar = {
+        ...userData,
+        gravatarUrl: getGravatarUrl(email)
+      };
+      
+      dispatch(setCurrentUser(userDataWithGravatar));
 
       if (rememberMe) {
         localStorage.setItem('token', userData.token);
       }
 
-      return userData; // Return the user data
+      return userDataWithGravatar;
     } catch (error) {
       toast.error('Login failed! Please check your credentials.');
-      throw error; // Re-throw the error so it can be caught in the onSubmit function
+      throw error;
     }
   };
 };

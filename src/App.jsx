@@ -8,8 +8,11 @@ import TeamPage from './pages/TeamPage';
 import AboutPage from './pages/AboutPage';
 import SignUpPage from './pages/SignUpPage';
 import LogInPage from './pages/LogInPage';
+import useAutoLogin from './hooks/useAutoLogin'; // Import the auto-login hook
 
 function App() {
+  useAutoLogin(); // Call the hook to check for auto-login on app load
+
   return (
     <>
       <Switch>

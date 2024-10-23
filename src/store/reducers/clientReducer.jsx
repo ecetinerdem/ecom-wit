@@ -18,6 +18,10 @@ const clientReducer = (state = initialState, action) => {
         user: action.payload,
         gravatarUrl: action.payload.email ? getGravatarUrl(action.payload.email) : null
       };
+    case 'LOGOUT':  // Add this case
+      return {
+        ...initialState
+      };
     case 'SET_ROLES':
       return { ...state, roles: action.payload };
     case 'SET_THEME':

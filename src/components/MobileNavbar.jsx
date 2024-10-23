@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { getGravatarUrl } from '../utils/gravatarUtil';
+import { logoutUserThunk } from '../store/actions/authActions';
+import { toast } from 'react-toastify';
 
 const MobileNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   // Get user from Redux store
   const user = useSelector((state) => state.client.user);
@@ -27,6 +32,21 @@ const MobileNavbar = () => {
     setImageError(true);
   };
 
+  const handleLogout = async () => {
+    try {
+      const result = await dispatch(logoutUserThunk());
+      if (result.success) {
+        toast.success('Logged out successfully');
+        setIsMenuOpen(false); // Close the menu
+        history.push('/login');
+      } else {
+        toast.error('Logout failed');
+      }
+    } catch (error) {
+      toast.error('An error occurred during logout');
+    }
+  };
+
   const UserSection = () => (
     user?.name ? (
       <div className="flex items-center gap-2">
@@ -45,6 +65,12 @@ const MobileNavbar = () => {
           </div>
         )}
         <span className="font-semibold text-[#737373]">{user.name}</span>
+        <button 
+          onClick={handleLogout}
+          className='text-[#23A6F0] hover:text-[#1a7ab3] font-bold ml-2'
+        >
+          Logout
+        </button>
       </div>
     ) : (
       <div className='flex gap-4'>

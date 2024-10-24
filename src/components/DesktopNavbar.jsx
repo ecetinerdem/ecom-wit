@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getGravatarUrl } from '../utils/gravatarUtil';
 import { logoutUserThunk } from '../store/actions/authActions';
+import { fetchCategories } from '../store/actions/productActions';
 import { toast } from 'react-toastify';
 
 const DesktopNavbar = () => {
@@ -15,11 +16,20 @@ const DesktopNavbar = () => {
 
   // Get user from Redux store
   const user = useSelector((state) => state.client.user);
-  
+  // Get categories from Redux store
+  const categories = useSelector((state) => state.products.categories);
+
+  // Fetch categories when component mounts
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  // Separate categories by gender
+  const womenCategories = categories.filter(cat => cat.gender === 'k');
+  const menCategories = categories.filter(cat => cat.gender === 'e');
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleShop = () => setIsShopOpen(!isShopOpen);
-
-  const categories = ['Bags', 'Belts', 'Cosmetics', 'Accessories', 'Hats'];
 
   // Use our utility function to get Gravatar URL
   const gravatarUrl = user?.email ? getGravatarUrl(user.email) : null;
@@ -100,28 +110,29 @@ const DesktopNavbar = () => {
                   {isShopOpen && (
                     <div className='absolute left-0 mt-2 w-96 bg-white border border-gray-200 rounded-md shadow-lg z-50'>
                       <div className='flex gap-4'>
-                        {/* Categories sections remain the same */}
+                        {/* Categories for Women */}
                         <div className='w-1/2 py-1 px-2'>
                           <p className='px-2 py-2 text-sm font-bold text-gray-700 mb-4'>Women</p>
-                          {categories.map((category, index) => (
+                          {womenCategories.map((category) => (
                             <Link
-                              key={`women-${index}`}
-                              to='/shop'
+                              key={category.id}
+                              to={`/shop/k/${category.code.split(':')[1]}`}
                               className='block px-2 mb-4 text-sm font-semibold text-[#737373] hover:bg-gray-100'
                             >
-                              {category}
+                              {category.title}
                             </Link>
                           ))}
                         </div>
+                        {/* Categories for Men */}
                         <div className='w-1/2 py-1 px-2 border-gray-200'>
                           <p className='px-2 py-2 text-sm font-bold text-gray-700 mb-4'>Men</p>
-                          {categories.map((category, index) => (
+                          {menCategories.map((category) => (
                             <Link
-                              key={`men-${index}`}
-                              to='/shop'
+                              key={category.id}
+                              to={`/shop/e/${category.code.split(':')[1]}`}
                               className='block px-2 mb-4 text-sm font-semibold text-[#737373] hover:bg-gray-100'
                             >
-                              {category}
+                              {category.title}
                             </Link>
                           ))}
                         </div>
@@ -142,31 +153,31 @@ const DesktopNavbar = () => {
             )}
           </div>
           <div className='flex items-center gap-6 mr-4 text-[#23A6F0]'>
-          {user?.name ? (
-    <div className='flex items-center gap-4'>
-      {!imageError && gravatarUrl ? (
-        <img
-          src={gravatarUrl}
-          alt={`${user.name}'s avatar`}
-          className='w-8 h-8 rounded-full object-cover'
-          onError={handleImageError}
-        />
-      ) : (
-        <div className='w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center'>
-          <span className='text-gray-600 text-sm font-bold'>
-            {user.name.charAt(0).toUpperCase()}
-          </span>
-        </div>
-      )}
-      <span className='font-bold text-[#737373]'>{user.name}</span>
-      <button 
-        onClick={handleLogout}
-        className='text-[#23A6F0] hover:text-[#1a7ab3] font-bold ml-2'
-      >
-        Logout
-      </button>
-    </div>
-  ) : (
+            {user?.name ? (
+              <div className='flex items-center gap-4'>
+                {!imageError && gravatarUrl ? (
+                  <img
+                    src={gravatarUrl}
+                    alt={`${user.name}'s avatar`}
+                    className='w-8 h-8 rounded-full object-cover'
+                    onError={handleImageError}
+                  />
+                ) : (
+                  <div className='w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center'>
+                    <span className='text-gray-600 text-sm font-bold'>
+                      {user.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <span className='font-bold text-[#737373]'>{user.name}</span>
+                <button 
+                  onClick={handleLogout}
+                  className='text-[#23A6F0] hover:text-[#1a7ab3] font-bold ml-2'
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
               <div className='flex gap-4'>
                 <Link to='/login'>
                   <i className='fa-regular fa-user mr-2'></i>

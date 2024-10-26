@@ -18,11 +18,9 @@ function App() {
       <>
         <Switch>
           <Route path="/" exact component={HomePage} />
-          {/* Update shop routes to handle categories */}
           <Route path="/shop/:gender/:category" component={ShopPage} />
           <Route path="/shop" exact component={ShopPage} />
-          <Route path="/shop/:gender/:category/:categoryId" component={ShopPage} />
-          <Route path="/products/:id" component={ProductDetailPage} />
+          <Route path="/shop/:gender/:category/:categoryId/:productNameSlug/:productId" component={ProductDetailPage} />
           <Route path="/contact" component={ContactPage} />
           <Route path="/team" component={TeamPage} />
           <Route path="/about" component={AboutPage} />

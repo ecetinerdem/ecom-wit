@@ -18,7 +18,10 @@ export const ACTION_TYPES = {
   SET_SORT: 'SET_SORT',
   FETCH_PRODUCTS_START: 'FETCH_PRODUCTS_START',
   FETCH_PRODUCTS_SUCCESS: 'FETCH_PRODUCTS_SUCCESS',
-  FETCH_PRODUCTS_FAILURE: 'FETCH_PRODUCTS_FAILURE'
+  FETCH_PRODUCTS_FAILURE: 'FETCH_PRODUCTS_FAILURE',
+  FETCH_PRODUCT_DETAIL_START: 'FETCH_PRODUCT_DETAIL_START',
+  FETCH_PRODUCT_DETAIL_SUCCESS: 'FETCH_PRODUCT_DETAIL_SUCCESS',
+  FETCH_PRODUCT_DETAIL_FAILURE: 'FETCH_PRODUCT_DETAIL_FAILURE'
 };
 
 // Action Creators
@@ -95,6 +98,20 @@ export const fetchProductsSuccess = (data) => ({
 
 export const fetchProductsFailure = (error) => ({
   type: ACTION_TYPES.FETCH_PRODUCTS_FAILURE,
+  payload: error
+});
+
+export const fetchProductDetailStart = () => ({
+  type: ACTION_TYPES.FETCH_PRODUCT_DETAIL_START
+});
+
+export const fetchProductDetailSuccess = (product) => ({
+  type: ACTION_TYPES.FETCH_PRODUCT_DETAIL_SUCCESS,
+  payload: product
+});
+
+export const fetchProductDetailFailure = (error) => ({
+  type: ACTION_TYPES.FETCH_PRODUCT_DETAIL_FAILURE,
   payload: error
 });
 
@@ -217,6 +234,19 @@ export const fetchCategories = () => {
     } catch (error) {
       toast.error('Failed to fetch categories');
       console.error('Error fetching categories:', error);
+    }
+  };
+};
+
+export const fetchProductDetail = (productId) => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchProductDetailStart());
+      const response = await api.get(`/products/${productId}`);
+      dispatch(fetchProductDetailSuccess(response.data));
+    } catch (error) {
+      dispatch(fetchProductDetailFailure(error.message));
+      toast.error('Failed to fetch product details');
     }
   };
 };

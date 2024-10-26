@@ -15,14 +15,34 @@ const initialState = {
   },
   fetchState: 'NOT_FETCHED',
   loading: false,
-  error: null
+  error: null,
+  categoryId: null,
+  gender: null,
+  categoryName: null,
 };
 
 const productReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.SET_CATEGORIES:
       return { ...state, categories: action.payload };
-      
+
+    case ACTION_TYPES.SET_CATEGORY_ID:
+      return {
+        ...state,
+        categoryId: action.payload
+      };
+        
+    case ACTION_TYPES.SET_GENDER:
+      return {
+        ...state,
+        gender: action.payload
+      };
+        
+    case ACTION_TYPES.SET_CATEGORY_NAME:
+      return {
+        ...state,
+        categoryName: action.payload
+      };
     case ACTION_TYPES.SET_PRODUCT_LIST:
       return { ...state, productList: action.payload };
       

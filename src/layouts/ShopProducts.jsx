@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { handlePageChange, handleLimitChange, fetchProducts } from '../store/actions/productActions';
+import { handlePageChange, handleLimitChange, fetchProducts, navigateToCategory } from '../store/actions/productActions';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ShopProducts = () => {
+  const { gender, category } = useParams();
   const dispatch = useDispatch();
   const { 
     productList, 
@@ -12,16 +14,28 @@ const ShopProducts = () => {
     error,
     total,
     limit,
-    offset 
+    offset,
+    categories // Add this
   } = useSelector(state => state.products);
 
+  useEffect(() => {
+    // Add this new effect for category filtering
+    if (gender && category) {
+      const categoryObj = categories.find(
+        cat => cat.gender === gender && cat.code.split(':')[1] === category
+      );
+      if (categoryObj) {
+        dispatch(navigateToCategory(gender, category, categoryObj.id));
+      }
+    }
+  }, [gender, category, categories, dispatch]);
 
-  
-
-// Inside component:
-useEffect(() => {
-  dispatch(fetchProducts());
-}, [dispatch]);
+  // Keep your existing useEffect
+  useEffect(() => {
+    if (!gender && !category) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, gender, category]);
 
   const currentPage = Math.floor(offset / limit) + 1;
   const totalPages = Math.ceil(total / limit);

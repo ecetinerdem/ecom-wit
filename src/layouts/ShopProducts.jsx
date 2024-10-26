@@ -1,9 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { handlePageChange, handleLimitChange, fetchProducts, navigateToCategory } from '../store/actions/productActions';
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { handlePageChange, fetchProducts, navigateToCategory, fetchCategories } from '../store/actions/productActions';
 
 const ShopProducts = () => {
   const { gender, category } = useParams();
@@ -18,8 +16,13 @@ const ShopProducts = () => {
     categories // Add this
   } = useSelector(state => state.products);
 
+  // Fetch categories when the component mounts
   useEffect(() => {
-    // Add this new effect for category filtering
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Effect for category filtering
     if (gender && category) {
       const categoryObj = categories.find(
         cat => cat.gender === gender && cat.code.split(':')[1] === category
@@ -30,7 +33,7 @@ const ShopProducts = () => {
     }
   }, [gender, category, categories, dispatch]);
 
-  // Keep your existing useEffect
+  // Fetch products when no gender or category is selected
   useEffect(() => {
     if (!gender && !category) {
       dispatch(fetchProducts());
@@ -63,13 +66,16 @@ const ShopProducts = () => {
 
   return (
     <div className="w-full mt-4 flex flex-col justify-center items-center mb-16">
-      {/* Parent div */}
       <div className="w-[85%] mx-auto mt-8 md:mt-8">
-        {/* Grid for the products */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {productList.map((product) => (
-            <div key={product.id} className="">
-              <Link to={`/products/${product.id}`}>
+            <div 
+              key={product.id} 
+              className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
+            >
+              <Link 
+                to={`/shop/${gender}/${category}/${product.name.toLowerCase().replace(/\s+/g, '-')}/${product.id}`}
+              >
                 <img 
                   src={product.images[0].url} 
                   alt={product.name} 
@@ -83,7 +89,6 @@ const ShopProducts = () => {
                   <span className="text-[#23856D]">${product.price.toFixed(2)}</span>
                 </div>
               </Link>
-              {/* Rating and Stock */}
               <div className="mt-4 flex justify-center space-x-4">
                 <div className="flex items-center">
                   <span className="text-sm text-[#BDBDBD]">Rating: </span>
@@ -98,35 +103,36 @@ const ShopProducts = () => {
           ))}
         </div>
       </div>
-      {/* Pagination */}
       <div className="flex justify-center mt-8 shadow-md">
         <div className="flex">
           <button 
             onClick={() => paginate(1)} 
             disabled={currentPage === 1}
-            className="px-4 py-4 text-sm font-medium text-[#23A6F0] bg-white border border-[#E9E9E9] rounded-l-sm hover:bg-gray-100 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-[#23A6F0] disabled:opacity-50"
           >
             First
+            </button>
+          <button 
+            onClick={() => paginate(currentPage - 1)} 
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm font-medium text-[#23A6F0] disabled:opacity-50"
+          >
+            Previous
           </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .slice(Math.max(0, currentPage - 2), Math.min(totalPages, currentPage + 1))
-            .map((number) => (
-              <button
-                key={number}
-                onClick={() => paginate(number)}
-                className={`px-4 py-4 text-sm font-medium border-t border-b border-[#E9E9E9] ${
-                  currentPage === number
-                    ? 'text-white bg-[#23A6F0]'
-                    : 'text-[#23A6F0] bg-white hover:bg-gray-100'
-                } ${number === 1 ? 'border-l' : ''}`}
-              >
-                {number}
-              </button>
-            ))}
+          <span className="px-4 py-2 text-sm font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button 
+            onClick={() => paginate(currentPage + 1)} 
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm font-medium text-[#23A6F0] disabled:opacity-50"
+          >
+            Next
+          </button>
           <button 
             onClick={() => paginate(totalPages)} 
             disabled={currentPage === totalPages}
-            className="px-4 py-4 text-sm font-medium text-[#23A6F0] bg-white border border-[#E9E9E9] rounded-r-sm hover:bg-gray-100 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-[#23A6F0] disabled:opacity-50"
           >
             Last
           </button>

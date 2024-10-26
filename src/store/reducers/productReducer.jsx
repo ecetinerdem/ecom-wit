@@ -19,6 +19,9 @@ const initialState = {
   categoryId: null,
   gender: null,
   categoryName: null,
+  currentProduct: null,
+  productLoading: false,
+  productError: null,
 };
 
 const productReducer = (state = initialState, action) => {
@@ -88,6 +91,28 @@ const productReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload
+      };
+
+    case ACTION_TYPES.FETCH_PRODUCT_DETAIL_START:
+      return {
+        ...state,
+        productLoading: true,
+        productError: null
+      };
+      
+    case ACTION_TYPES.FETCH_PRODUCT_DETAIL_SUCCESS:
+      return {
+        ...state,
+        productLoading: false,
+        currentProduct: action.payload,
+        productError: null
+      };
+      
+    case ACTION_TYPES.FETCH_PRODUCT_DETAIL_FAILURE:
+      return {
+        ...state,
+        productLoading: false,
+        productError: action.payload
       };
       
     default:

@@ -18,9 +18,10 @@ function App() {
       <>
         <Switch>
           <Route path="/" exact component={HomePage} />
+          {/* Product detail route should come BEFORE the category route */}
+          <Route path="/shop/:gender/:category/:productNameSlug/:productId" component={ProductDetailPage} />
           <Route path="/shop/:gender/:category" component={ShopPage} />
           <Route path="/shop" exact component={ShopPage} />
-          <Route path="/shop/:gender/:category/:categoryId/:productNameSlug/:productId" component={ProductDetailPage} />
           <Route path="/contact" component={ContactPage} />
           <Route path="/team" component={TeamPage} />
           <Route path="/about" component={AboutPage} />

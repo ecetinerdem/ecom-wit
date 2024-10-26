@@ -5,28 +5,48 @@ import { Heart, ShoppingCart, Eye } from 'lucide-react';
 import { fetchProductDetail } from '../store/actions/productActions';
 
 function ProductDetail() {
-  const { id } = useParams();
+  // Updated to get all route parameters
+  const { gender, category, productNameSlug, productId } = useParams();
   const dispatch = useDispatch();
   const { currentProduct: product, productLoading } = useSelector(state => state.products);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderImages, setSliderImages] = useState([]);
 
+  // Fetch product using productId from URL
   useEffect(() => {
-    if (id) {
-      dispatch(fetchProductDetail(id));
+    if (productId) {
+      dispatch(fetchProductDetail(productId));
     }
-  }, [dispatch, id]);
+  }, [dispatch, productId]);
+
+
+
+  // Mock data for random images (you can replace these with your actual mock data)
+  const mockImages = [
+    'https://picsum.photos/400/400?random=1',
+    'https://picsum.photos/400/400?random=2',
+    'https://picsum.photos/400/400?random=3',
+    'https://picsum.photos/400/400?random=4',
+    'https://picsum.photos/400/400?random=5'
+  ];
 
   useEffect(() => {
     if (product && product.images) {
-      // Create slider images array from product images
-      // If product has multiple images, use them; if not, repeat the first image
-      const productImages = product.images.map(img => img.url);
-      const repeatedImages = productImages.length < 5 
-        ? [...productImages, ...Array(5 - productImages.length).fill(productImages[0])]
-        : productImages.slice(0, 5);
+      // Get the main product image
+      const mainImage = product.images[0]?.url;
       
-      setSliderImages(repeatedImages);
+      // Create an array of 5 images:
+      // 1. Start with the main product image
+      // 2. Fill the rest with random mock images
+      const imageSet = [mainImage];
+      
+      // Add random images from mockImages, excluding any that match the main image
+      const remainingMockImages = mockImages.filter(img => img !== mainImage);
+      const randomImages = remainingMockImages
+        .sort(() => 0.5 - Math.random()) // Shuffle the array
+        .slice(0, 4); // Take first 4 images
+      
+      setSliderImages([...imageSet, ...randomImages]);
     }
   }, [product]);
 
@@ -38,6 +58,7 @@ function ProductDetail() {
     setCurrentSlide((prevSlide) => (prevSlide === sliderImages.length - 1 ? 0 : prevSlide + 1));
   };
 
+  // Show loading state
   if (productLoading) {
     return (
       <div className="w-full h-96 flex items-center justify-center">
@@ -50,11 +71,15 @@ function ProductDetail() {
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      {/* Breadcrumbs Section */}
+      {/* Enhanced Breadcrumbs Section */}
       <div className="flex space-x-2 mb-6">
         <h6 className="text-[#252B42] font-bold">Home</h6>
         <h6 className="text-[#BDBDBD] font-bold">{'>'}</h6>
-        <h6 className="text-[#BDBDBD] font-bold">Shop</h6>
+        <h6 className="text-[#252B42] font-bold">Shop</h6>
+        <h6 className="text-[#BDBDBD] font-bold">{'>'}</h6>
+        <h6 className="text-[#252B42] font-bold capitalize">{gender}</h6>
+        <h6 className="text-[#BDBDBD] font-bold">{'>'}</h6>
+        <h6 className="text-[#252B42] font-bold capitalize">{category}</h6>
       </div>
 
       {/* Main Product Section */}
@@ -65,18 +90,18 @@ function ProductDetail() {
             <img 
               src={sliderImages[currentSlide]} 
               alt={`${product.name}`} 
-              className="w-full h-full object-cover" 
+              className="w-full h-full object-cover rounded-lg shadow-lg" 
             />
             
             {/* Slider Arrows */}
             <button
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-transparent text-white text-4xl md:text-6xl font-thin"
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all"
               onClick={previous}
             >
               &#8249;
             </button>
             <button
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-transparent text-white text-4xl md:text-6xl font-thin"
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all"
               onClick={next}
             >
               &#8250;
@@ -90,7 +115,11 @@ function ProductDetail() {
                 key={index}
                 src={src}
                 alt={`Thumbnail ${index + 1}`}
-                className={`w-16 h-16 object-cover cursor-pointer ${currentSlide === index ? 'border-2 border-blue-500' : ''}`}
+                className={`w-16 h-16 object-cover cursor-pointer rounded-md transition-all
+                  ${currentSlide === index 
+                    ? 'border-2 border-[#23A6F0] shadow-lg scale-105' 
+                    : 'border border-gray-200 hover:border-[#23A6F0] hover:scale-105'
+                  }`}
                 onClick={() => setCurrentSlide(index)}
               />
             ))}
@@ -126,21 +155,21 @@ function ProductDetail() {
           {/* Availability */}
           <p className="text-sm text-gray-500">
             Availability: {' '}
-            <span className={`${product.stock > 0 ? 'text-[#23A6F0]' : 'text-red-500'}`}>
+            <span className={`font-medium ${product.stock > 0 ? 'text-[#23A6F0]' : 'text-red-500'}`}>
               {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
             </span>
             {product.stock > 0 && ` (${product.stock} items)`}
           </p>
 
           {/* Description */}
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 leading-relaxed">
             {product.description}
           </p>
 
           {/* Select Options Button and Action Icons */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
             <button 
-              className="bg-[#23A6F0] text-white py-3 px-6 rounded disabled:bg-gray-400"
+              className="bg-[#23A6F0] text-white py-3 px-6 rounded-lg hover:bg-[#1b86c3] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               disabled={product.stock === 0}
             >
               {product.stock === 0 ? 'Out of Stock' : 'Select Options'}
@@ -149,7 +178,7 @@ function ProductDetail() {
               {[Heart, ShoppingCart, Eye].map((Icon, index) => (
                 <button 
                   key={index} 
-                  className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-gray-50"
+                  className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-gray-50 transition-all"
                 >
                   <Icon size={20} className="text-gray-500" />
                 </button>

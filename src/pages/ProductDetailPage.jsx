@@ -17,6 +17,7 @@ const ProductDetailPage = () => {
 
   return (
     <div>
+      
       <Header />
       <ProductPageContent />
       <Brands />

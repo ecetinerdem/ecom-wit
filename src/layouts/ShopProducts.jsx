@@ -13,16 +13,16 @@ const ShopProducts = () => {
     total,
     limit,
     offset,
-    categories // Add this
+    categories
   } = useSelector(state => state.products);
 
-  // Fetch categories when the component mounts
+  const categoryId = useSelector(state => state.products.categoryId);
+
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
   useEffect(() => {
-    // Effect for category filtering
     if (gender && category) {
       const categoryObj = categories.find(
         cat => cat.gender === gender && cat.code.split(':')[1] === category
@@ -33,17 +33,28 @@ const ShopProducts = () => {
     }
   }, [gender, category, categories, dispatch]);
 
-  // Fetch products when no gender or category is selected
   useEffect(() => {
     if (!gender && !category) {
       dispatch(fetchProducts());
     }
   }, [dispatch, gender, category]);
 
+  // Enrich products with category information
+  const enrichedProducts = productList.map(product => {
+    const categoryInfo = categories.find(cat => cat.id === product.category_id);
+    if (categoryInfo) {
+      return {
+        ...product,
+        categoryGender: categoryInfo.gender,
+        categoryCode: categoryInfo.code.split(':')[1]
+      };
+    }
+    return product;
+  });
+
   const currentPage = Math.floor(offset / limit) + 1;
   const totalPages = Math.ceil(total / limit);
 
-  // Change page
   const paginate = (pageNumber) => {
     dispatch(handlePageChange(pageNumber));
   };
@@ -68,13 +79,13 @@ const ShopProducts = () => {
     <div className="w-full mt-4 flex flex-col justify-center items-center mb-16">
       <div className="w-[85%] mx-auto mt-8 md:mt-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {productList.map((product) => (
+          {enrichedProducts.map((product) => (
             <div 
               key={product.id} 
               className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
             >
               <Link 
-                to={`/shop/${gender}/${category}/${product.name.toLowerCase().replace(/\s+/g, '-')}/${product.id}`}
+                to={`/shop/${product.categoryGender || gender}/${product.categoryCode || category}/${product.name.toLowerCase().replace(/\s+/g, '-')}/${product.id}`}
               >
                 <img 
                   src={product.images[0].url} 
@@ -103,6 +114,7 @@ const ShopProducts = () => {
           ))}
         </div>
       </div>
+      {/* Pagination section remains the same */}
       <div className="flex justify-center mt-8 shadow-md">
         <div className="flex">
           <button 
@@ -111,7 +123,7 @@ const ShopProducts = () => {
             className="px-4 py-2 text-sm font-medium text-[#23A6F0] disabled:opacity-50"
           >
             First
-            </button>
+          </button>
           <button 
             onClick={() => paginate(currentPage - 1)} 
             disabled={currentPage === 1}

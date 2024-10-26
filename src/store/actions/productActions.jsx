@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 // Action Types (let's organize them at the top)
 export const ACTION_TYPES = {
   SET_CATEGORIES: 'SET_CATEGORIES',
+  SET_CATEGORY_ID: 'SET_CATEGORY_ID',
+  SET_GENDER: 'SET_GENDER',
+  SET_CATEGORY_NAME: 'SET_CATEGORY_NAME',
   SET_PRODUCT_LIST: 'SET_PRODUCT_LIST',
   SET_TOTAL: 'SET_TOTAL',
   SET_FETCH_STATE: 'SET_FETCH_STATE',
@@ -22,6 +25,21 @@ export const ACTION_TYPES = {
 export const setCategories = (categories) => ({
   type: ACTION_TYPES.SET_CATEGORIES,
   payload: categories,
+});
+
+export const setCategoryId = (categoryId) => ({
+  type: ACTION_TYPES.SET_CATEGORY_ID,
+  payload: categoryId,
+});
+
+export const setGender = (gender) => ({
+  type: ACTION_TYPES.SET_GENDER,
+  payload: gender,
+});
+
+export const setCategoryName = (categoryName) => ({
+  type: ACTION_TYPES.SET_CATEGORY_NAME,
+  payload: categoryName,
 });
 
 export const setProductList = (productList) => ({
@@ -85,53 +103,59 @@ export const fetchProducts = (options = {}) => {
   return async (dispatch, getState) => {
     try {
       dispatch(fetchProductsStart());
-      dispatch(setFetchState('FETCHING'));
       
-      // Get current state values
       const { 
         limit, 
         offset, 
-        filter, 
-        search, 
-        sort 
+        filter,  // This is our search term
+        sort,
+        categoryId 
       } = getState().products;
       
-      // Construct query parameters
-      const queryParams = {
-        limit,
-        offset,
-        ...options
-      };
+      // Build query parameters
+      let queryParams = new URLSearchParams();
       
-      // Add filter if exists
-      if (filter) {
-        queryParams.filter = filter;
+      // Add pagination
+      queryParams.append('limit', limit);
+      queryParams.append('offset', offset);
+      
+      // Add category if exists
+      if (categoryId || options.category) {
+        queryParams.append('category', options.category || categoryId);
       }
       
-      // Add search if exists
-      if (search) {
-        queryParams.search = search;
+      // Add filter/search if exists
+      if (filter && filter.trim()) {
+        queryParams.append('filter', filter.trim());
       }
       
       // Add sort if exists
-      if (sort.field) {
-        queryParams.sortField = sort.field;
-        queryParams.sortOrder = sort.order;
+      if (sort.field && sort.order) {
+        queryParams.append('sort', `${sort.field}:${sort.order}`);
       }
       
-      const response = await api.get('/products', { params: queryParams });
-      const { products, total } = response.data;
+      // Log the final URL for debugging
+      console.log('Fetching products with URL:', `/products?${queryParams.toString()}`);
       
-      dispatch(fetchProductsSuccess({ products, total }));
+      const response = await api.get(`/products?${queryParams.toString()}`);
+      
+      dispatch(fetchProductsSuccess(response.data));
       dispatch(setFetchState('FETCHED'));
-      dispatch(setProductList(products));
-      dispatch(setTotal(total));
+      
     } catch (error) {
       dispatch(fetchProductsFailure(error.message));
-      dispatch(setFetchState('ERROR'));
       toast.error('Failed to fetch products');
-      console.error('Error fetching products:', error);
     }
+  };
+};
+
+// Helper action for category navigation
+export const navigateToCategory = (gender, categoryName, categoryId) => {
+  return (dispatch) => {
+    dispatch(setGender(gender));
+    dispatch(setCategoryName(categoryName));
+    dispatch(setCategoryId(categoryId));
+    dispatch(fetchProducts({ category: categoryId }));
   };
 };
 
@@ -167,15 +191,17 @@ export const handleFilterChange = (newFilter) => {
 // Helper action for handling search
 export const handleSearch = (searchTerm) => {
   return (dispatch) => {
-    dispatch(setSearch(searchTerm));
+    dispatch(setFilter(searchTerm));
     dispatch(setOffset(0)); // Reset to first page
     dispatch(fetchProducts());
   };
 };
 
 // Helper action for handling sort
-export const handleSort = (field, order = 'asc') => {
+export const handleSort = (sortString) => {
   return (dispatch) => {
+    // Parse the sort string (e.g., "price:desc")
+    const [field, order] = sortString.split(':');
     dispatch(setSort({ field, order }));
     dispatch(fetchProducts());
   };

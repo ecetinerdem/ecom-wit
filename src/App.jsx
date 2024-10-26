@@ -21,6 +21,7 @@ function App() {
           {/* Update shop routes to handle categories */}
           <Route path="/shop/:gender/:category" component={ShopPage} />
           <Route path="/shop" exact component={ShopPage} />
+          <Route path="/shop/:gender/:category/:categoryId" component={ShopPage} />
           <Route path="/products/:id" component={ProductDetailPage} />
           <Route path="/contact" component={ContactPage} />
           <Route path="/team" component={TeamPage} />

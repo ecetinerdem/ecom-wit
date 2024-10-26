@@ -88,7 +88,7 @@ const FilterComponent = () => {
       </div>
 
       {/* Filter Form */}
-      <form onSubmit={handleFilterSubmit} className="flex items-center space-x-2">
+      <form onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row gap-2 md:gap-0 items-center space-x-2">
         {/* Search Input */}
         <input
           type="text"

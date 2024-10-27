@@ -1,8 +1,15 @@
+import Footer from '@/layouts/Footer'
+import Header from '@/layouts/Header'
+import ShoppingCartContent from '@/layouts/ShoppingCartContent'
 import React from 'react'
 
 function ShoppingCartPage() {
   return (
-    <div>ShoppingCartPage</div>
+    <div>
+        <Header/>
+        <ShoppingCartContent />
+        <Footer />
+    </div>
   )
 }
 

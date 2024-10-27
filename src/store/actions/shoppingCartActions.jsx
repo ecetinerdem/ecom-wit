@@ -4,6 +4,7 @@ export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
 export const CLEAR_CART = 'CLEAR_CART';
 export const SET_PAYMENT = 'SET_PAYMENT';
 export const SET_ADDRESS = 'SET_ADDRESS';
+export const CALCULATE_CART_TOTALS = 'CALCULATE_CART_TOTALS';
 
 // Cart Actions
 export const addToCart = (product) => ({
@@ -93,4 +94,18 @@ export const saveCartToStorage = (cart) => {
   } catch (err) {
     console.error('Error saving cart to storage:', err);
   }
+};
+
+export const calculateCartTotals = () => (dispatch, getState) => {
+  const { cart } = getState().shoppingCart;
+
+  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const taxRate = 0.1; // 10% tax
+  const tax = subtotal * taxRate;
+  const total = subtotal + tax;
+
+  dispatch({
+    type: CALCULATE_CART_TOTALS,
+    payload: { subtotal, tax, total },
+  });
 };

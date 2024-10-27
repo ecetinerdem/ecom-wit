@@ -1,5 +1,5 @@
 import { loadCartFromStorage } from "@/utils/localStorage";
-import { ADD_TO_CART, CLEAR_CART, REMOVE_FROM_CART, SET_ADDRESS, SET_PAYMENT, UPDATE_QUANTITY } from "../actions/shoppingCartActions";
+import { ADD_TO_CART, CLEAR_CART, REMOVE_FROM_CART, SET_ADDRESS, SET_PAYMENT, UPDATE_QUANTITY, CALCULATE_CART_TOTALS } from "../actions/shoppingCartActions";
 
 const initialState = {
   cart: loadCartFromStorage(),
@@ -108,6 +108,14 @@ const shoppingCartReducer = (state = initialState, action) => {
       return {
         ...state,
         address: action.payload
+      };
+
+    case CALCULATE_CART_TOTALS:
+      return {
+        ...state,
+        subtotal: action.payload.subtotal,
+        tax: action.payload.tax,
+        total: action.payload.total,
       };
 
     default:

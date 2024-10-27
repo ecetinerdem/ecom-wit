@@ -26,13 +26,13 @@ const ShoppingCartContent = () => {
   };
 
   return (
-    <div className="shopping-cart-content">
-      <h2 className="text-2xl font-bold text-gray-700 mb-4">Shopping Cart</h2>
+    <div className="shopping-cart-content mt-8 ">
+      <h2 className="text-2xl font-bold text-gray-700 mb-4 ml-4 md:ml-10">Your Cart</h2>
 
       <div className="cart-items bg-[#FAFAFA]">
         {cartItems.map((item) => (
           <div key={item.id} className="flex items-center justify-between py-4 border-b border-gray-200">
-            <img src={item.image} alt={item.name} className="md:ml-10 w-20 h-20 object-cover rounded" />
+            <img src={item.image} alt={item.name} className=" ml-4 md:ml-10 w-20 h-20 object-cover rounded" />
             
             <div className="flex-1 ml-4">
               <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
@@ -58,7 +58,7 @@ const ShoppingCartContent = () => {
 
             <button
               onClick={() => handleRemoveProduct(item.id)}
-              className="mr-10 text-red-600 hover:text-red-800"
+              className="mr-6 md:mr-10 text-red-600 hover:text-red-800"
             >
               <Trash2 size={20} />
             </button>
@@ -68,20 +68,20 @@ const ShoppingCartContent = () => {
 
       <div className="mt-6">
         <div className="flex justify-between text-lg font-semibold">
-          <span>Subtotal:</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span className='md:ml-10'>Subtotal:</span>
+          <span className='md:mr-10'>${subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-lg font-semibold">
-          <span>Tax:</span>
-          <span>${tax.toFixed(2)}</span>
+          <span className='md:ml-10'>Tax:</span>
+          <span className='md:mr-10'>${tax.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-xl font-bold text-gray-800 mt-2">
-          <span>Total:</span>
-          <span>${total.toFixed(2)}</span>
+          <span className='md:ml-10'>Total:</span>
+          <span className='md:mr-10'>${total.toFixed(2)}</span>
         </div>
       </div>
 
-      <div className="flex justify-end space-x-4 mt-6">
+      <div className="flex justify-center md:justify-end md:mr-10 space-x-4 mt-6">
         <Link
           to="/products"
           className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"

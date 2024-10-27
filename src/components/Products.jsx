@@ -1,18 +1,29 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProducts } from '../store/actions/productActions';
+import { fetchProducts, fetchCategories } from '../store/actions/productActions';
 
 const Products = () => {
   const dispatch = useDispatch();
-  const { productList, loading, error } = useSelector(state => state.products);
+  const { productList, loading, error, categories } = useSelector(state => state.products);
 
-  // Fetch products on component mount
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Handle loading state
+  const enrichedProducts = productList.map(product => {
+    const categoryInfo = categories.find(cat => cat.id === product.category_id);
+    if (categoryInfo) {
+      return {
+        ...product,
+        categoryGender: categoryInfo.gender,
+        categoryCode: categoryInfo.code.split(':')[1]
+      };
+    }
+    return product;
+  });
+
   if (loading) {
     return (
       <div className="w-full h-96 flex items-center justify-center">
@@ -21,7 +32,6 @@ const Products = () => {
     );
   }
 
-  // Handle error state
   if (error) {
     return (
       <div className="w-full h-96 flex items-center justify-center text-red-500">
@@ -30,7 +40,6 @@ const Products = () => {
     );
   }
 
-  // Handle empty product list
   if (!productList.length) {
     return (
       <div className="w-full h-96 flex items-center justify-center">
@@ -44,11 +53,16 @@ const Products = () => {
       <h1 className="text-2xl font-bold mb-4">Products</h1>
       <div className="w-[85%] mx-auto mt-8 md:mt-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {productList.map((product) => (
-            <div key={product.id} className="">
-              <Link to={`/products/${product.id}`}>
+          {enrichedProducts.map((product) => (
+            <div 
+              key={product.id} 
+              className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
+            >
+              <Link 
+                to={`/shop/${product.categoryGender}/${product.categoryCode}/${product.name.toLowerCase().replace(/\s+/g, '-')}/${product.id}`}
+              >
                 <img 
-                  src={product.images[0]?.url} // Use optional chaining to avoid errors if images array is empty
+                  src={product.images[0]?.url}
                   alt={product.name} 
                   className="w-full h-98 object-cover mb-4 md:h-85" 
                 />
@@ -60,7 +74,6 @@ const Products = () => {
                   <span className="text-[#23856D]">${product.price.toFixed(2)}</span>
                 </div>
               </Link>
-              {/* Rating and Stock */}
               <div className="mt-4 flex justify-center space-x-4">
                 <div className="flex items-center">
                   <span className="text-sm text-[#BDBDBD]">Rating: </span>

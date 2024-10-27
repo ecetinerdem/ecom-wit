@@ -131,7 +131,7 @@ const ShopProducts = () => {
           >
             Previous
           </button>
-          <span className="px-4 py-2 text-sm font-medium">
+          <span className="px-4 py-2 text-sm text-[#23A6F0] font-medium">
             Page {currentPage} of {totalPages}
           </span>
           <button 

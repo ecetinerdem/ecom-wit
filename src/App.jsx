@@ -10,6 +10,7 @@ import SignUpPage from './pages/SignUpPage';
 import LogInPage from './pages/LogInPage';
 import useAutoLogin from './hooks/useAutoLogin';
 
+
 function App() {
   useAutoLogin();
 

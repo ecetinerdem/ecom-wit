@@ -32,7 +32,7 @@ const ShoppingCartContent = () => {
       <div className="cart-items bg-[#FAFAFA]">
         {cartItems.map((item) => (
           <div key={item.id} className="flex items-center justify-between py-4 border-b border-gray-200">
-            <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+            <img src={item.image} alt={item.name} className="md:ml-10 w-20 h-20 object-cover rounded" />
             
             <div className="flex-1 ml-4">
               <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>

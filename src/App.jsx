@@ -9,6 +9,7 @@ import AboutPage from './pages/AboutPage';
 import SignUpPage from './pages/SignUpPage';
 import LogInPage from './pages/LogInPage';
 import useAutoLogin from './hooks/useAutoLogin';
+import ShoppingCartPage from './pages/ShoppingCartPage';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/about" component={AboutPage} />
           <Route path="/signup" component={SignUpPage} />
           <Route path="/login" component={LogInPage} />
+          <Route path="/cart" component={ShoppingCartPage} />
         </Switch>
         <ToastContainer
           position="top-right"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getGravatarUrl } from '../utils/gravatarUtil';
@@ -7,21 +7,47 @@ import { toast } from 'react-toastify';
 
 const MobileNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isShopOpen, setIsShopOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isCartHovered, setIsCartHovered] = useState(false);
+  const cartDropdownRef = useRef(null);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   // Get user from Redux store
   const user = useSelector((state) => state.client.user);
+  // Get cart from Redux store
+  const cart = useSelector((state) => state.shoppingCart.cart);
+  // Calculate total quantity
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Prevent body scroll when cart is open
+  useEffect(() => {
+    if (isCartHovered) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isCartHovered]);
+
+  // Handle click outside for cart dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (cartDropdownRef.current && !cartDropdownRef.current.contains(event.target)) {
+        setIsCartHovered(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const toggleShop = () => {
-    setIsShopOpen(!isShopOpen);
   };
 
   // Get Gravatar URL using our utility
@@ -37,7 +63,7 @@ const MobileNavbar = () => {
       const result = await dispatch(logoutUserThunk());
       if (result.success) {
         toast.success('Logged out successfully');
-        setIsMenuOpen(false); // Close the menu
+        setIsMenuOpen(false);
         history.push('/login');
       } else {
         toast.error('Logout failed');
@@ -74,13 +100,12 @@ const MobileNavbar = () => {
       </div>
     ) : (
       <div className='flex gap-4'>
-        <Link to="/login" className=''>
+        <Link to="/login">
           <i className="fa-regular fa-user mr-2"></i>
         </Link>
       </div>
     )
   );
-
   return (
     <nav className="bg-white p-4 shadow-md">
       {/* Navbar Header (always visible) */}
@@ -91,7 +116,100 @@ const MobileNavbar = () => {
         <div className="flex items-center space-x-4">
           <UserSection />
           <i className="fa-solid fa-magnifying-glass"></i>
-          <i className="fa-solid fa-cart-shopping"></i>
+          
+          {/* Shopping Cart Icon with Dropdown */}
+          <div className="relative" ref={cartDropdownRef}>
+            <div
+              className="relative cursor-pointer"
+              onClick={() => setIsCartHovered(!isCartHovered)}
+            >
+              <i className='fa-solid fa-cart-shopping'></i>
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#E74040] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {totalQuantity}
+                </span>
+              )}
+            </div>
+
+            {/* Cart Dropdown */}
+            {isCartHovered && cart.length > 0 && (
+              <div className="fixed inset-x-0 top-[60px] mx-4 bg-white rounded-md shadow-lg z-50 border border-gray-200 max-h-[calc(100vh-80px)] overflow-y-auto">
+                <div className="p-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Shopping Cart</h3>
+                    <button 
+                      onClick={() => setIsCartHovered(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  </div>
+                  
+                  {cart.map((item) => (
+                    <div key={item.id} className="flex items-center gap-3 mb-4 pb-4 border-b">
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-gray-600 text-sm">
+                          Quantity: {item.quantity}
+                        </p>
+                        <p className="text-[#23A6F0] font-semibold">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="mt-4 pt-4 border-t">
+                    <div className="flex justify-between font-semibold mb-4">
+                      <span>Total:</span>
+                      <span>
+                        ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                      </span>
+                    </div>
+                    
+                    <div className="flex flex-col gap-2">
+                      <Link 
+                        to="/cart" 
+                        className="bg-[#23A6F0] text-white py-2 px-4 rounded text-center hover:bg-[#1a7ab3]"
+                        onClick={() => setIsCartHovered(false)}
+                      >
+                        View Cart
+                      </Link>
+                      <Link 
+                        to="/checkout" 
+                        className="bg-[#2DC071] text-white py-2 px-4 rounded text-center hover:bg-[#26A861]"
+                        onClick={() => setIsCartHovered(false)}
+                      >
+                        Checkout
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Empty Cart Message */}
+            {isCartHovered && cart.length === 0 && (
+              <div className="fixed inset-x-0 top-[60px] mx-4 bg-white rounded-md shadow-lg z-50 border border-gray-200">
+                <div className="p-4 text-center">
+                  <p className="text-gray-500">Your cart is empty</p>
+                  <Link 
+                    to="/shop" 
+                    className="text-[#23A6F0] hover:text-[#1a7ab3] mt-2 inline-block"
+                    onClick={() => setIsCartHovered(false)}
+                  >
+                    Continue Shopping
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
           <button onClick={toggleMenu} className="focus:outline-none">
             <i className="fa-solid fa-bars"></i>
           </button>
@@ -110,7 +228,14 @@ const MobileNavbar = () => {
               <div className="flex items-center space-x-4">
                 <UserSection />
                 <i className="fa-solid fa-magnifying-glass"></i>
-                <i className="fa-solid fa-cart-shopping"></i>
+                <div className="relative">
+                  <i className='fa-solid fa-cart-shopping'></i>
+                  {totalQuantity > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-[#E74040] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                      {totalQuantity}
+                    </span>
+                  )}
+                </div>
                 <button onClick={toggleMenu} className="focus:outline-none">
                   <i className="fa-solid fa-bars"></i>
                 </button>
@@ -120,32 +245,23 @@ const MobileNavbar = () => {
 
           {/* Menu Items */}
           <div className="space-y-6 text-center font-semibold text-4xl mt-8">
-            <Link to="/" className="block py-2 text-[#737373] hover:text-gray-900">Home</Link>
-            <Link to="/about" className="block py-2 text-[#737373] hover:text-gray-900">About</Link>
-            <Link to="/shop" className="block py-2 text-[#737373] hover:text-gray-900" onClick={toggleShop}>Shop</Link>
-            {isShopOpen && (
-              <div className="flex flex-col items-center mt-4">
-                <Link to="/shop/bags" className="block py-2 text-[#737373] hover:text-gray-900">Bags</Link>
-                <Link to="/shop/belts" className="block py-2 text-[#737373] hover:text-gray-900">Belts</Link>
-                <Link to="/shop/cosmetics" className="block py-2 text-[#737373] hover:text-gray-900">Cosmetics</Link>
-                <Link to="/shop/accessories" className="block py-2 text-[#737373] hover:text-gray-900">Accessories</Link>
-                <Link to="/shop/hats" className="block py-2 text-[#737373] hover:text-gray-900">Hats</Link>
-              </div>
-            )}
-            <Link to="/team" className="block py-2 text-[#737373] hover:text-gray-900">Team</Link>
-            <Link to="/contact" className="block py-2 text-[#737373] hover:text-gray-900">Contact</Link>
+            <Link to="/" className="block py-2 text-[#737373] hover:text-gray-900" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link to="/about" className="block py-2 text-[#737373] hover:text-gray-900" onClick={() => setIsMenuOpen(false)}>About</Link>
+            <Link to="/shop" className="block py-2 text-[#737373] hover:text-gray-900" onClick={() => setIsMenuOpen(false)}>Shop</Link>
+            <Link to="/team" className="block py-2 text-[#737373] hover:text-gray-900" onClick={() => setIsMenuOpen(false)}>Team</Link>
+            <Link to="/contact" className="block py-2 text-[#737373] hover:text-gray-900" onClick={() => setIsMenuOpen(false)}>Contact</Link>
           </div>
           
           {/* Social Icons */}
           <div className="flex flex-col items-center gap-4 mt-8 text-[#23A6F0]">
             {!user?.name && (
               <div className='flex gap-4'>
-                <Link to="/login" className=''>
+                <Link to="/login" className='' onClick={() => setIsMenuOpen(false)}>
                   <i className="fa-regular fa-user fa-2xl mr-2"></i>
                   <span className='font-normal text-2xl'>Login</span>
                 </Link>
                 <span className='font-normal text-2xl'>/</span>
-                <Link to="/signup" className='font-normal text-2xl'>Register</Link>
+                <Link to="/signup" className='font-normal text-2xl' onClick={() => setIsMenuOpen(false)}>Register</Link>
               </div>
             )}
             <div className='flex flex-col gap-16 mt-10'>

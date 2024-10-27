@@ -83,7 +83,7 @@ const ShoppingCartContent = () => {
 
       <div className="flex justify-center md:justify-end md:mr-10 space-x-4 mt-6">
         <Link
-          to="/products"
+          to="/shop"
           className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
         >
           Continue Shopping

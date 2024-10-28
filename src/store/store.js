@@ -4,12 +4,14 @@ import logger from 'redux-logger';
 import clientReducer from './reducers/clientReducer';
 import productReducer from './reducers/productReducer';
 import shoppingCartReducer from './reducers/shoppingCartReducer';
+import  addressReducer  from './reducers/addressReducer';
 
 // Combine all reducers
 const rootReducer = combineReducers({
   client: clientReducer,
   products: productReducer,
   shoppingCart: shoppingCartReducer,
+  address: addressReducer,
 });
 
 // Create Redux store with Thunk and Logger middleware using legacy createStore

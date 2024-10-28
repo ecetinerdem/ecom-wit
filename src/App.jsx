@@ -10,6 +10,7 @@ import SignUpPage from './pages/SignUpPage';
 import LogInPage from './pages/LogInPage';
 import useAutoLogin from './hooks/useAutoLogin';
 import ShoppingCartPage from './pages/ShoppingCartPage';
+import ShipmentPage from './pages/ShipmentPage';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signup" component={SignUpPage} />
           <Route path="/login" component={LogInPage} />
           <Route path="/cart" component={ShoppingCartPage} />
+          <Route path="/shipment" component={ShipmentPage} />
         </Switch>
         <ToastContainer
           position="top-right"

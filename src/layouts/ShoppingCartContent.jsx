@@ -52,7 +52,7 @@ const ShoppingCartContent = () => {
     const isAuthenticated = Object.keys(user).length > 0;
 
     if (isAuthenticated) {
-      history.push('/checkout');
+      history.push('/shipment');
     } else {
       toast.info('Please login to continue with checkout');
       history.push('/login');
@@ -117,7 +117,7 @@ const ShoppingCartContent = () => {
           <div className="bg-[#f1f0ef] p-6 rounded-lg">
             <h3 className="text-xl font-bold text-gray-800 mb-4">Order Summary</h3>
             
-            <div className="space-y-3">
+            <div className="space-y-3 bg-white p-4">
               <div className="flex justify-between text-lg">
                 <span>Subtotal:</span>
                 <span>${subtotal.toFixed(2)}</span>

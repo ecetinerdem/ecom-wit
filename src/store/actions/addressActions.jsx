@@ -1,4 +1,3 @@
-// src/store/actions/addressActions.js
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 
@@ -30,9 +29,18 @@ export const fetchAddresses = () => async (dispatch) => {
   
   try {
     const response = await api.get('/user/address');
+    const formattedAddresses = response.data.map(address => ({
+      ...address,
+      name: String(address.name || ''),
+      surname: String(address.surname || ''),
+      address: String(address.address || ''),
+      city: String(address.city || ''),
+      district: String(address.district || '')
+    }));
+    
     dispatch({
       type: ADDRESS_ACTIONS.FETCH_ADDRESSES_SUCCESS,
-      payload: response.data
+      payload: formattedAddresses
     });
   } catch (error) {
     dispatch({
@@ -49,10 +57,22 @@ export const addAddress = (addressData) => async (dispatch) => {
   
   try {
     const response = await api.post('/user/address', addressData);
+    const formattedAddress = {
+      ...response.data,
+      name: String(response.data.name || ''),
+      surname: String(response.data.surname || ''),
+      address: String(response.data.address || ''),
+      city: String(response.data.city || ''),
+      district: String(response.data.district || '')
+    };
+    
     dispatch({
       type: ADDRESS_ACTIONS.ADD_ADDRESS_SUCCESS,
-      payload: response.data
+      payload: formattedAddress
     });
+    
+    // Fetch updated address list after adding
+    dispatch(fetchAddresses());
     toast.success('Address added successfully');
   } catch (error) {
     dispatch({
@@ -69,10 +89,22 @@ export const updateAddress = (addressData) => async (dispatch) => {
   
   try {
     const response = await api.put('/user/address', addressData);
+    const formattedAddress = {
+      ...response.data,
+      name: String(response.data.name || ''),
+      surname: String(response.data.surname || ''),
+      address: String(response.data.address || ''),
+      city: String(response.data.city || ''),
+      district: String(response.data.district || '')
+    };
+    
     dispatch({
       type: ADDRESS_ACTIONS.UPDATE_ADDRESS_SUCCESS,
-      payload: response.data
+      payload: formattedAddress
     });
+    
+    // Fetch updated address list after updating
+    dispatch(fetchAddresses());
     toast.success('Address updated successfully');
   } catch (error) {
     dispatch({
@@ -93,6 +125,9 @@ export const deleteAddress = (addressId) => async (dispatch) => {
       type: ADDRESS_ACTIONS.DELETE_ADDRESS_SUCCESS,
       payload: addressId
     });
+    
+    // Fetch updated address list after deleting
+    dispatch(fetchAddresses());
     toast.success('Address deleted successfully');
   } catch (error) {
     dispatch({
@@ -106,10 +141,24 @@ export const deleteAddress = (addressId) => async (dispatch) => {
 // Set Selected Addresses
 export const setSelectedShippingAddress = (address) => ({
   type: ADDRESS_ACTIONS.SET_SELECTED_SHIPPING_ADDRESS,
-  payload: address
+  payload: address ? {
+    ...address,
+    name: String(address.name || ''),
+    surname: String(address.surname || ''),
+    address: String(address.address || ''),
+    city: String(address.city || ''),
+    district: String(address.district || '')
+  } : null
 });
 
 export const setSelectedBillingAddress = (address) => ({
   type: ADDRESS_ACTIONS.SET_SELECTED_BILLING_ADDRESS,
-  payload: address
+  payload: address ? {
+    ...address,
+    name: String(address.name || ''),
+    surname: String(address.surname || ''),
+    address: String(address.address || ''),
+    city: String(address.city || ''),
+    district: String(address.district || '')
+  } : null
 });

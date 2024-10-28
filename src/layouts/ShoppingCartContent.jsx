@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Trash2 } from 'lucide-react';
 import { removeFromCartWithStorage, updateQuantityWithStorage } from '../store/actions/shoppingCartActions';
-import { calculateCartTotals } from '../store/actions/shoppingCartActions'; // Action to calculate totals
+import { calculateCartTotals } from '../store/actions/shoppingCartActions';
 
 const ShoppingCartContent = () => {
   const dispatch = useDispatch();
@@ -12,7 +12,9 @@ const ShoppingCartContent = () => {
   const tax = useSelector((state) => state.shoppingCart.tax);
   const total = useSelector((state) => state.shoppingCart.total);
 
-  // Calculate totals on initial load and whenever cartItems changes
+  // State to track selected items
+  const [selectedItems, setSelectedItems] = useState({});
+
   useEffect(() => {
     dispatch(calculateCartTotals());
   }, [cartItems, dispatch]);
@@ -23,16 +25,38 @@ const ShoppingCartContent = () => {
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeFromCartWithStorage(productId));
+    // Remove from selected items if deleted
+    const newSelectedItems = { ...selectedItems };
+    delete newSelectedItems[productId];
+    setSelectedItems(newSelectedItems);
   };
 
+  const handleCheckboxChange = (productId) => {
+    setSelectedItems(prev => ({
+      ...prev,
+      [productId]: !prev[productId]
+    }));
+  };
+
+  // Check if any items are selected
+  const hasSelectedItems = Object.values(selectedItems).some(selected => selected);
+
   return (
-    <div className="shopping-cart-content mt-8 ">
+    <div className="shopping-cart-content mt-8">
       <h2 className="text-2xl font-bold text-gray-700 mb-4 ml-4 md:ml-10">Your Cart</h2>
 
       <div className="cart-items bg-[#FAFAFA]">
         {cartItems.map((item) => (
           <div key={item.id} className="flex items-center justify-between py-4 border-b border-gray-200">
-            <img src={item.image} alt={item.name} className=" ml-4 md:ml-10 w-20 h-20 object-cover rounded" />
+            <div className="flex items-center ml-4 md:ml-10">
+              <input
+                type="checkbox"
+                checked={selectedItems[item.id] || false}
+                onChange={() => handleCheckboxChange(item.id)}
+                className="w-4 h-4 mr-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+            </div>
             
             <div className="flex-1 ml-4">
               <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
@@ -68,16 +92,16 @@ const ShoppingCartContent = () => {
 
       <div className="mt-6">
         <div className="flex justify-between text-lg font-semibold">
-          <span className='md:ml-10'>Subtotal:</span>
-          <span className='md:mr-10'>${subtotal.toFixed(2)}</span>
+          <span className="md:ml-10">Subtotal:</span>
+          <span className="md:mr-10">${subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-lg font-semibold">
-          <span className='md:ml-10'>Tax:</span>
-          <span className='md:mr-10'>${tax.toFixed(2)}</span>
+          <span className="md:ml-10">Tax:</span>
+          <span className="md:mr-10">${tax.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-xl font-bold text-gray-800 mt-2">
-          <span className='md:ml-10'>Total:</span>
-          <span className='md:mr-10'>${total.toFixed(2)}</span>
+          <span className="md:ml-10">Total:</span>
+          <span className="md:mr-10">${total.toFixed(2)}</span>
         </div>
       </div>
 
@@ -90,7 +114,12 @@ const ShoppingCartContent = () => {
         </Link>
         <Link
           to="/checkout"
-          className="px-6 py-2 bg-[#2DC071] text-white rounded hover:bg-green-600"
+          className={`px-6 py-2 rounded ${
+            hasSelectedItems 
+              ? 'bg-[#2DC071] text-white hover:bg-green-600' 
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+          onClick={(e) => !hasSelectedItems && e.preventDefault()}
         >
           Checkout
         </Link>

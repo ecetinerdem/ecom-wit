@@ -20,7 +20,7 @@ const ShipmentContent = () => {
   const selectedShippingAddress = useSelector((state) => state.address.selectedShippingAddress);
   const selectedBillingAddress = useSelector((state) => state.address.selectedBillingAddress);
 
-  //Todo: Fix the adding adress issiue. Right now ı need to refresh the page to see new address. Also updating adress makes it shown only as coma!
+  //Todo: Add a button to use the same adress for shipping and billing
   useEffect(() => {
     if (!cartItems.length) {
       toast.info('Your cart is empty');

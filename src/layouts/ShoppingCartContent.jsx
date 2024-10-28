@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Trash2 } from 'lucide-react';
 import { removeFromCartWithStorage, updateQuantityWithStorage } from '../store/actions/shoppingCartActions';
 import { calculateCartTotals } from '../store/actions/shoppingCartActions';
+import { toast } from 'react-toastify';
 
 const ShoppingCartContent = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const cartItems = useSelector((state) => state.shoppingCart.cart);
   const subtotal = useSelector((state) => state.shoppingCart.subtotal);
   const tax = useSelector((state) => state.shoppingCart.tax);
   const total = useSelector((state) => state.shoppingCart.total);
+  const user = useSelector((state) => state.client.user);
 
   const [selectedItems, setSelectedItems] = useState({});
 
@@ -37,6 +40,24 @@ const ShoppingCartContent = () => {
   };
 
   const hasSelectedItems = Object.values(selectedItems).some(selected => selected);
+
+  const handleCheckoutClick = (e) => {
+    e.preventDefault();
+    
+    if (!hasSelectedItems) {
+      return; // Do nothing if no items are selected
+    }
+
+    // Check if user is authenticated by checking if user object has any properties
+    const isAuthenticated = Object.keys(user).length > 0;
+
+    if (isAuthenticated) {
+      history.push('/checkout');
+    } else {
+      toast.info('Please login to continue with checkout');
+      history.push('/login');
+    }
+  };
 
   return (
     <div className="shopping-cart-content mt-8">
@@ -120,17 +141,17 @@ const ShoppingCartContent = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3 mt-6">
-              <Link
-                to="/checkout"
+              <button
+                onClick={handleCheckoutClick}
                 className={`w-full block text-center py-3 px-6 rounded ${
                   hasSelectedItems 
                     ? 'bg-[#2DC071] text-white hover:bg-green-600' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
-                onClick={(e) => !hasSelectedItems && e.preventDefault()}
+                disabled={!hasSelectedItems}
               >
                 Checkout
-              </Link>
+              </button>
               
               <Link
                 to="/shop"

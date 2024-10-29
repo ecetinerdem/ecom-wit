@@ -118,7 +118,7 @@ const PaymentContent = () => {
                           message: "Please enter a valid 16-digit card number"
                         }
                       })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#23A6F0] focus:ring-0 text-lg py-2 px-3"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-[#23A6F0] focus:outline-none text-lg py-2 px-3"
                       type="text"
                       maxLength={16}
                     />
@@ -135,7 +135,7 @@ const PaymentContent = () => {
                           message: "Please enter only characters and spaces"
                         }
                       })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#23A6F0] focus:ring-0 text-lg py-2 px-3"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-[#23A6F0] focus:outline-none text-lg py-2 px-3"
                       type="text"
                     />
                     {errors.name_on_card && <span className="text-red-500 text-sm">{errors.name_on_card.message}</span>}
@@ -147,7 +147,7 @@ const PaymentContent = () => {
                       {...register("expire_month", {
                         required: "Expiration month is required"
                       })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#23A6F0] focus:ring-0 text-lg py-2 px-3"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-[#23A6F0] focus:outline-none text-lg py-2 px-3"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
                         <option key={month} value={month.toString().padStart(2, '0')}>
@@ -170,7 +170,7 @@ const PaymentContent = () => {
                         min: { value: new Date().getFullYear(), message: "Invalid year" },
                         max: { value: new Date().getFullYear() + 10, message: "Invalid year" }
                       })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#23A6F0] focus:ring-0 text-lg py-2 px-3"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-[#23A6F0] focus:outline-none text-lg py-2 px-3"
                       type="text"
                       maxLength={4}
                     />
@@ -187,7 +187,7 @@ const PaymentContent = () => {
                           message: "Please enter a valid 3-digit CVV"
                         }
                       })}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#23A6F0] focus:ring-0 text-lg py-2 px-3"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-[#23A6F0] focus:outline-none text-lg py-2 px-3"
                       type="password"
                       maxLength={3}
                     />

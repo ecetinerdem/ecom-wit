@@ -103,7 +103,7 @@ const ShoppingCartContent = () => {
 
                 <button
                   onClick={() => handleRemoveProduct(item.id)}
-                  className="mr-6 text-red-600 hover:text-red-800"
+                  className="mr-6 p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-red-50"
                 >
                   <Trash2 size={20} />
                 </button>

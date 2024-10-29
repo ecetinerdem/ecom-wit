@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { fetchCardsThunk, addCardThunk, updateCardThunk, deleteCardThunk } from '../store/actions/creditCardActions';
+import { calculateCartTotals } from '../store/actions/shoppingCartActions';
 import { useForm } from 'react-hook-form';
 import { CreditCard, Trash2, Edit, Plus } from 'lucide-react';
 
@@ -10,9 +11,7 @@ const PaymentContent = () => {
   const history = useHistory();
   
   const { cards, loading, error } = useSelector((state) => state.creditCard);
-  const cartTotal = useSelector((state) => {
-    return state.cart ? state.cart.total || 0 : 0;
-  });
+  const { subtotal, tax, total } = useSelector((state) => state.shoppingCart);
   const { isAuthenticated } = useSelector(state => state.auth);
   
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -31,6 +30,10 @@ const PaymentContent = () => {
       history.push('/login');
     }
   }, [isAuthenticated, history]);
+
+  useEffect(() => {
+    dispatch(calculateCartTotals());
+  }, [dispatch]);
 
   const onSubmit = async (data) => {
     try {
@@ -71,7 +74,7 @@ const PaymentContent = () => {
     if (!selectedCard) return;
     try {
       // Add your payment processing logic here
-      history.push('/orders');
+      history.push('/order');
     } catch (error) {
       console.error('Payment processing error:', error);
     }
@@ -174,7 +177,7 @@ const PaymentContent = () => {
                       type="text"
                       maxLength={4}
                     />
-                                        {errors.expire_year && <span className="text-red-500 text-sm">{errors.expire_year.message}</span>}
+                    {errors.expire_year && <span className="text-red-500 text-sm">{errors.expire_year.message}</span>}
                   </div>
 
                   <div>
@@ -217,59 +220,59 @@ const PaymentContent = () => {
               </form>
             )}
 
-<div className="space-y-4">
-  {Array.isArray(cards) && cards.length > 0 ? (
-    cards.map((card) => (
-      card && card.id ? (
-        <div
-          key={card.id}
-          className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-            selectedCard === card.id
-              ? 'border-[#23A6F0] bg-blue-50'
-              : 'border-gray-200 hover:border-[#23A6F0]'
-          }`}
-          onClick={() => setSelectedCard(card.id)}
-        >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <CreditCard className="text-[#23A6F0]" size={24} />
-              <div>
-                <p className="font-medium">
-                  **** **** **** {card.card_no ? card.card_no.slice(-4) : 'XXXX'}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Expires {card.expire_month || 'XX'}/{card.expire_year || 'XXXX'}
-                </p>
-              </div>
+            <div className="space-y-4">
+              {Array.isArray(cards) && cards.length > 0 ? (
+                cards.map((card) => (
+                  card && card.id ? (
+                    <div
+                      key={card.id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                        selectedCard === card.id
+                          ? 'border-[#23A6F0] bg-blue-50'
+                          : 'border-gray-200 hover:border-[#23A6F0]'
+                      }`}
+                      onClick={() => setSelectedCard(card.id)}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                          <CreditCard className="text-[#23A6F0]" size={24} />
+                          <div>
+                            <p className="font-medium">
+                              **** **** **** {card.card_no ? card.card_no.slice(-4) : 'XXXX'}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              Expires {card.expire_month || 'XX'}/{card.expire_year || 'XXXX'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(card);
+                            }}
+                            className="p-2 text-gray-500 hover:text-[#23A6F0] rounded-full hover:bg-blue-50"
+                          >
+                            <Edit size={20} />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(card.id);
+                            }}
+                            className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-red-50"
+                          >
+                            <Trash2 size={20} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null
+                ))
+              ) : (
+                <p>No cards available. Please add a card.</p>
+              )}
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit(card);
-                }}
-                className="p-2 text-gray-500 hover:text-[#23A6F0] rounded-full hover:bg-blue-50"
-              >
-                <Edit size={20} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(card.id);
-                }}
-                className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-red-50"
-              >
-                <Trash2 size={20} />
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null
-    ))
-  ) : (
-    <p>No cards available. Please add a card.</p>
-  )}
-</div>
           </div>
         </div>
 
@@ -279,16 +282,20 @@ const PaymentContent = () => {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>${subtotal?.toFixed(2) || '0.00'}</span>
               </div>
               <div className="flex justify-between">
                 <span>Processing Fee</span>
                 <span>$0.00</span>
               </div>
+              <div className="flex justify-between">
+                <span>Tax (18%)</span>
+                <span>${tax?.toFixed(2) || '0.00'}</span>
+              </div>
               <div className="border-t pt-3 mt-3">
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>${total?.toFixed(2) || '0.00'}</span>
                 </div>
               </div>
             </div>

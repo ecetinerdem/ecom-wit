@@ -11,6 +11,7 @@ import LogInPage from './pages/LogInPage';
 import useAutoLogin from './hooks/useAutoLogin';
 import ShoppingCartPage from './pages/ShoppingCartPage';
 import ShipmentPage from './pages/ShipmentPage';
+import PaymentPage from './pages/PaymentPage';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/login" component={LogInPage} />
           <Route path="/cart" component={ShoppingCartPage} />
           <Route path="/shipment" component={ShipmentPage} />
+          <Route path="/payment" component={PaymentPage} />
         </Switch>
         <ToastContainer
           position="top-right"

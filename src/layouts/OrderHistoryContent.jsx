@@ -1,59 +1,139 @@
-// src/pages/OrderHistory.js
-import React, { useEffect } from 'react';
+// src/layouts/OrderHistoryContent.jsx
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { ChevronDown, ChevronUp, Package } from 'lucide-react';
 import { fetchOrderHistoryThunk } from '../store/actions/orderActions';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import { format } from 'date-fns';
 
 const OrderHistoryContent = () => {
   const dispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state) => state.order);
-  const [expandedOrder, setExpandedOrder] = useState(null);
+  const history = useHistory();
+  const [expandedOrders, setExpandedOrders] = useState([]);
+
+  const { orders, loading, error } = useSelector(state => state.order);
+  const user = useSelector(state => state.client.user);
 
   useEffect(() => {
-    dispatch(fetchOrderHistoryThunk());
-  }, [dispatch]);
+    if (!user || Object.keys(user).length === 0) {
+      history.push('/login');
+      return;
+    }
 
-  const toggleOrderDetails = (orderId) => {
-    setExpandedOrder(expandedOrder === orderId ? null : orderId);
+    dispatch(fetchOrderHistoryThunk());
+  }, [user, dispatch, history]);
+
+  const toggleOrderExpansion = (orderId) => {
+    setExpandedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
   };
 
-  if (loading) return <div>Loading order history...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!orders.length) return <div>No past orders found.</div>;
+  // Console logs for debugging
+  console.log('Redux state:', useSelector(state => state));
+  console.log('Orders from state:', orders);
+  console.log('Loading:', loading);
+  console.log('Error:', error);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#23A6F0]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Order History</h2>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        {orders.map((order) => (
-          <div key={order.id}>
-            <div
-              onClick={() => toggleOrderDetails(order.id)}
-              className="flex items-center justify-between p-4 cursor-pointer bg-gray-100 hover:bg-gray-200"
-            >
-              <div>
-                <p className="text-gray-700 font-semibold">Order Date: {new Date(order.order_date).toLocaleDateString()}</p>
-                <p className="text-gray-500">Total: ${order.price}</p>
-              </div>
-              {expandedOrder === order.id ? <ChevronUp /> : <ChevronDown />}
-            </div>
-            {expandedOrder === order.id && (
-              <div className="p-4 bg-gray-50">
-                <h3 className="font-semibold">Order Details</h3>
-                <ul className="mt-2 space-y-2">
-                  {order.products.map((product, index) => (
-                    <li key={index} className="flex justify-between">
-                      <span>Product ID: {product.product_id}</span>
-                      <span>Quantity: {product.count}</span>
-                      <span>Detail: {product.detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">Order History</h1>
+        
+        {orders.length === 0 ? (
+          <div className="bg-white rounded-lg shadow p-8 text-center">
+            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">No orders found</p>
           </div>
-        ))}
+        ) : (
+          <div className="space-y-4">
+            {orders.map((order) => (
+              <div key={order.id} className="bg-white rounded-lg shadow p-6">
+                <div 
+                  className="flex justify-between items-center cursor-pointer"
+                  onClick={() => toggleOrderExpansion(order.id)}
+                >
+                  <div>
+                    <h2 className="text-xl font-semibold">Order #{order.id}</h2>
+                    <p className="text-gray-600">
+                      {format(new Date(order.order_date), 'PPP')}
+                    </p>
+                  </div>
+                  <div className="flex items-center">
+                    <p className="mr-4 font-semibold">
+                      ${order.price.toFixed(2)}
+                    </p>
+                    {expandedOrders.includes(order.id) ? (
+                      <ChevronUp className="w-6 h-6 text-gray-500" />
+                    ) : (
+                      <ChevronDown className="w-6 h-6 text-gray-500" />
+                    )}
+                  </div>
+                </div>
+
+                {expandedOrders.includes(order.id) && (
+                  <div className="mt-4 border-t pt-4">
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold mb-2">Payment Details</h3>
+                        <p className="text-gray-600">
+                          Card holder: {order.card_name}
+                        </p>
+                        <p className="text-gray-600">
+                          Card number: ****{order.card_no.toString().slice(-4)}
+                        </p>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold mb-2">Products</h3>
+                        <div className="space-y-2">
+                          {order.products.map((product, index) => (
+                            <div 
+                              key={`${order.id}-${product.product_id}-${index}`}
+                              className="flex justify-between items-center bg-gray-50 p-3 rounded"
+                            >
+                              <div>
+                                <p className="font-medium">
+                                  Product ID: {product.product_id}
+                                </p>
+                                {product.detail && (
+                                  <p className="text-sm text-gray-600">
+                                    {product.detail}
+                                  </p>
+                                )}
+                              </div>
+                              <p className="text-gray-600">
+                                Quantity: {product.count}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

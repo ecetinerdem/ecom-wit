@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Heart, ShoppingCart, Eye } from 'lucide-react';
 import { fetchProductDetail } from '../store/actions/productActions';
 import { addToCartWithStorage } from '@/store/actions/shoppingCartActions';
+import { toast } from 'react-toastify';
 
 function ProductDetail() {
   const { gender, category, productNameSlug, productId } = useParams();

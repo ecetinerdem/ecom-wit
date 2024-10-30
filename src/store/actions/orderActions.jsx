@@ -97,7 +97,7 @@ export const fetchOrderHistoryThunk = () => async (dispatch) => {
   dispatch(orderAction('FETCH', { loading: true }));
   
   try {
-    const response = await api.get('/orders');
+    const response = await api.get('/order');
     saveOrdersToStorage(response.data);
     
     dispatch(orderAction('FETCH', { 

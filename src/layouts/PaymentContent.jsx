@@ -3,22 +3,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { fetchCardsThunk, addCardThunk, updateCardThunk, deleteCardThunk } from '../store/actions/creditCardActions';
 import { calculateCartTotals } from '../store/actions/shoppingCartActions';
+import { createOrderThunk } from '@/store/actions/orderActions';
 import { useForm } from 'react-hook-form';
 import { CreditCard, Trash2, Edit, Plus } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const PaymentContent = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   
+  // Redux state selectors
   const { cards, loading, error } = useSelector((state) => state.creditCard);
   const { subtotal, tax, total } = useSelector((state) => state.shoppingCart);
   const { isAuthenticated } = useSelector(state => state.auth);
+  const cart = useSelector((state) => state.shoppingCart.cart);
   
+  // Local state
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [editingCard, setEditingCard] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
 
+  // Effects
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(fetchCardsThunk());
@@ -35,6 +41,7 @@ const PaymentContent = () => {
     dispatch(calculateCartTotals());
   }, [dispatch]);
 
+  // Form submission handler
   const onSubmit = async (data) => {
     try {
       if (editingCard) {
@@ -47,15 +54,19 @@ const PaymentContent = () => {
       reset();
     } catch (error) {
       console.error('Form submission error:', error);
+      toast.error('Failed to save card details');
     }
   };
 
+  // Card management handlers
   const handleDelete = async (cardId) => {
     try {
       await dispatch(deleteCardThunk(cardId));
       if (selectedCard === cardId) setSelectedCard(null);
+      toast.success('Card deleted successfully');
     } catch (error) {
       console.error('Delete error:', error);
+      toast.error('Failed to delete card');
     }
   };
 
@@ -70,16 +81,54 @@ const PaymentContent = () => {
     setShowAddForm(true);
   };
 
+  // Payment completion handler
   const handleCompletePayment = async () => {
-    if (!selectedCard) return;
+    if (!selectedCard) {
+      toast.error('Please select a payment method');
+      return;
+    }
+
+    if (cart.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+
     try {
-      // Add your payment processing logic here
-      history.push('/order');
+      const cardDetails = cards.find(card => card.id === selectedCard);
+      
+      if (!cardDetails) {
+        toast.error('Selected card not found');
+        return;
+      }
+
+      const orderData = {
+        order_date: new Date().toISOString(),
+        card_no: cardDetails.card_no,
+        card_name: cardDetails.name_on_card,
+        card_expire_month: cardDetails.expire_month,
+        card_expire_year: cardDetails.expire_year,
+        card_ccv: cardDetails.cvv,
+        price: total,
+        products: cart.map(item => ({
+          product_id: item.id,
+          count: item.quantity,
+          detail: item.detail || `${item.name}`
+        }))
+      };
+
+      await dispatch(createOrderThunk(orderData));
+      toast.success('Order placed successfully!');
+      history.push('/order-complete');
     } catch (error) {
+      toast.error('Failed to process payment: ' + (error.message || 'Unknown error'));
       console.error('Payment processing error:', error);
     }
   };
 
+  // Validation for payment button
+  const isPaymentDisabled = !selectedCard || cart.length === 0;
+
+  // Loading state
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -91,6 +140,7 @@ const PaymentContent = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
+        {/* Payment Methods Section */}
         <div className="lg:w-2/3">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-6">
@@ -108,6 +158,7 @@ const PaymentContent = () => {
               </button>
             </div>
 
+            {/* Card Form */}
             {showAddForm && (
               <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -220,6 +271,7 @@ const PaymentContent = () => {
               </form>
             )}
 
+            {/* Cards List */}
             <div className="space-y-4">
               {Array.isArray(cards) && cards.length > 0 ? (
                 cards.map((card) => (
@@ -276,6 +328,7 @@ const PaymentContent = () => {
           </div>
         </div>
 
+        {/* Order Summary Section */}
         <div className="lg:w-1/3">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
@@ -303,24 +356,26 @@ const PaymentContent = () => {
             <button
               onClick={handleCompletePayment}
               className={`w-full mt-6 py-3 px-4 rounded-lg transition-colors ${
-                selectedCard
+                !isPaymentDisabled
                   ? 'bg-[#2DC071] hover:bg-[#25a862] text-white'
                   : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
-              disabled={!selectedCard || loading}
+              disabled={isPaymentDisabled}
             >
-              {loading ? 'Processing...' : 'Complete Payment'}
+              Complete Payment
             </button>
 
-            {!cards.length ? (
-              <p className="text-sm text-red-500 mt-2 text-center">
-                Please add a payment method to continue
-              </p>
-            ) : !selectedCard && (
-              <p className="text-sm text-red-500 mt-2 text-center">
-                Please select a card to complete payment
-              </p>
+            {isPaymentDisabled && (
+              <div className="mt-3 text-sm text-red-500">
+                {!selectedCard && <p>Please select a payment method</p>}
+                {cart.length === 0 && <p>Your cart is empty</p>}
+              </div>
             )}
+
+            <div className="mt-6 text-sm text-gray-500">
+              <p>By completing your payment, you agree to our terms and conditions.</p>
+              <p className="mt-2">Your payment information is encrypted and secure.</p>
+            </div>
           </div>
         </div>
       </div>

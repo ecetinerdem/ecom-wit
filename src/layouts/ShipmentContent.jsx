@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { fetchAddresses } from '../store/actions/addressActions';
+import { fetchAddresses, setSelectedShippingAddress, setSelectedBillingAddress } from '../store/actions/addressActions';
 import AddressForm from '../components/AddressForm';
 import AddressList from '../components/AddressList';
 import { toast } from 'react-toastify';
@@ -14,13 +14,13 @@ const ShipmentContent = () => {
   const [showBillingForm, setShowBillingForm] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editAddressData, setEditAddressData] = useState(null);
+  const [useSameAddress, setUseSameAddress] = useState(false);
 
   const { addresses, loading } = useSelector((state) => state.address);
   const cartItems = useSelector((state) => state.shoppingCart.cart);
   const selectedShippingAddress = useSelector((state) => state.address.selectedShippingAddress);
   const selectedBillingAddress = useSelector((state) => state.address.selectedBillingAddress);
 
-  //Todo: Add a button to use the same adress for shipping and billing
   useEffect(() => {
     if (!cartItems.length) {
       toast.info('Your cart is empty');
@@ -29,6 +29,25 @@ const ShipmentContent = () => {
     }
     dispatch(fetchAddresses());
   }, [dispatch, history, cartItems]);
+
+  // Effect to set default addresses if none selected
+  useEffect(() => {
+    if (addresses.length > 0) {
+      if (!selectedShippingAddress) {
+        dispatch(setSelectedShippingAddress(addresses[0]));
+      }
+      if (!selectedBillingAddress && !useSameAddress) {
+        dispatch(setSelectedBillingAddress(addresses[0]));
+      }
+    }
+  }, [addresses, selectedShippingAddress, selectedBillingAddress, dispatch, useSameAddress]);
+
+  // Effect to handle "use same address" functionality
+  useEffect(() => {
+    if (useSameAddress && selectedShippingAddress) {
+      dispatch(setSelectedBillingAddress(selectedShippingAddress));
+    }
+  }, [useSameAddress, selectedShippingAddress, dispatch]);
 
   const handleAddNewAddress = (type) => {
     if (type === 'shipping') {
@@ -61,8 +80,26 @@ const ShipmentContent = () => {
     setEditAddressData(null);
   };
 
+  const handleAddressSelection = (address, type) => {
+    if (type === 'shipping') {
+      dispatch(setSelectedShippingAddress(address));
+      if (useSameAddress) {
+        dispatch(setSelectedBillingAddress(address));
+      }
+    } else if (type === 'billing' && !useSameAddress) {
+      dispatch(setSelectedBillingAddress(address));
+    }
+  };
+
+  const handleUseSameAddress = (e) => {
+    setUseSameAddress(e.target.checked);
+    if (e.target.checked && selectedShippingAddress) {
+      dispatch(setSelectedBillingAddress(selectedShippingAddress));
+    }
+  };
+
   const handleContinueToPayment = () => {
-    if (!selectedShippingAddress || !selectedBillingAddress) {
+    if (!selectedShippingAddress || (!selectedBillingAddress && !useSameAddress)) {
       toast.error('Please select both shipping and billing addresses');
       return;
     }
@@ -93,30 +130,47 @@ const ShipmentContent = () => {
               selectedAddress={selectedShippingAddress}
               type="shipping"
               onEdit={handleEditAddress}
+              onSelect={handleAddressSelection}
               loading={loading}
             />
           </div>
 
-          {/* Billing Address Section */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-700">Billing Address</h3>
-              <button
-                onClick={() => handleAddNewAddress('billing')}
-                className="px-4 py-2 bg-[#23A6F0] text-white rounded hover:bg-blue-600"
-              >
-                Add New Address
-              </button>
-            </div>
-            
-            <AddressList
-              addresses={addresses}
-              selectedAddress={selectedBillingAddress}
-              type="billing"
-              onEdit={handleEditAddress}
-              loading={loading}
-            />
+          {/* Use Same Address Checkbox */}
+          <div className="mb-4">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={useSameAddress}
+                onChange={handleUseSameAddress}
+                className="form-checkbox"
+              />
+              <span>Use shipping address as billing address</span>
+            </label>
           </div>
+
+          {/* Billing Address Section */}
+          {!useSameAddress && (
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-gray-700">Billing Address</h3>
+                <button
+                  onClick={() => handleAddNewAddress('billing')}
+                  className="px-4 py-2 bg-[#23A6F0] text-white rounded hover:bg-blue-600"
+                >
+                  Add New Address
+                </button>
+              </div>
+              
+              <AddressList
+                addresses={addresses}
+                selectedAddress={selectedBillingAddress}
+                type="billing"
+                onEdit={handleEditAddress}
+                onSelect={handleAddressSelection}
+                loading={loading}
+              />
+            </div>
+          )}
         </div>
 
         {/* Right Column - Summary and Actions */}
@@ -135,7 +189,7 @@ const ShipmentContent = () => {
                 </div>
               )}
 
-              {selectedBillingAddress && (
+              {!useSameAddress && selectedBillingAddress && (
                 <div className="p-4 bg-white rounded">
                   <p className="font-semibold">Billing to:</p>
                   <p>{selectedBillingAddress.name} {selectedBillingAddress.surname}</p>

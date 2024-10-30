@@ -14,6 +14,7 @@ import ShipmentPage from './pages/ShipmentPage';
 import PaymentPage from './pages/PaymentPage';
 import OrderCompletePage from './pages/OrderCompletePage';
 import PrivateRoute from './components/PrivateRoute';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <PrivateRoute path="/shipment" component={ShipmentPage} />
           <PrivateRoute path="/payment" component={PaymentPage} />
           <PrivateRoute path="/order-complete" component={OrderCompletePage} />
+          <PrivateRoute path="/order-history" component={OrderHistoryPage} />
         </Switch>
         <ToastContainer
           position="top-right"

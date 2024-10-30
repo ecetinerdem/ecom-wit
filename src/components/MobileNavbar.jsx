@@ -9,7 +9,9 @@ const MobileNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isCartHovered, setIsCartHovered] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const cartDropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -46,8 +48,24 @@ const MobileNavbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Handle click outside for user dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen);
   };
 
   // Get Gravatar URL using our utility
@@ -75,7 +93,7 @@ const MobileNavbar = () => {
 
   const UserSection = () => (
     user?.name ? (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 relative" ref={userDropdownRef}>
         {!imageError && gravatarUrl ? (
           <img
             src={gravatarUrl}
@@ -91,12 +109,34 @@ const MobileNavbar = () => {
           </div>
         )}
         <span className="font-semibold text-[#737373]">{user.name}</span>
-        <button 
-          onClick={handleLogout}
-          className='text-[#23A6F0] hover:text-[#1a7ab3] font-bold ml-2'
-        >
-          Logout
+        <button onClick={toggleUserDropdown} className='focus:outline-none'>
+          <svg className="h-5 w-5 text-[#23A6F0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </button>
+        {isUserDropdownOpen && (
+          <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 top-full'>
+            <Link 
+              to="/order-history" 
+              className='block px-4 py-2 text-sm text-[#23A6F0] font-semibold hover:bg-gray-100'
+              onClick={() => {
+                setIsUserDropdownOpen(false);
+                setIsMenuOpen(false);
+              }}
+            >
+              Order History
+            </Link>
+            <button 
+              onClick={() => {
+                handleLogout();
+                setIsUserDropdownOpen(false);
+              }}
+              className='block w-full text-left px-4 py-2 text-sm text-[#23A6F0] font-semibold hover:bg-gray-100'
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     ) : (
       <div className='flex gap-4'>

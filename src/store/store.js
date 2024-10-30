@@ -7,6 +7,7 @@ import shoppingCartReducer from './reducers/shoppingCartReducer';
 import  addressReducer  from './reducers/addressReducer';
 import creditCardReducer from './reducers/creditCardReducer';
 import authReducer from './reducers/authReducer';
+import orderReducer from './reducers/orderReducer';
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   address: addressReducer,
   creditCard: creditCardReducer,
   auth: authReducer,
+  order: orderReducer,
 });
 
 // Create Redux store with Thunk and Logger middleware using legacy createStore

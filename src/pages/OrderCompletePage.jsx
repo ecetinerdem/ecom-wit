@@ -3,7 +3,7 @@ import Header from '@/layouts/Header'
 import OrderContent from '@/layouts/OrderContent'
 import React from 'react'
 
-function OrderPage() {
+function OrderCompletePage() {
   return (
     <div>
         <Header />
@@ -13,4 +13,4 @@ function OrderPage() {
   )
 }
 
-export default OrderPage
+export default OrderCompletePage

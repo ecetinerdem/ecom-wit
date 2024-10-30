@@ -12,7 +12,8 @@ import useAutoLogin from './hooks/useAutoLogin';
 import ShoppingCartPage from './pages/ShoppingCartPage';
 import ShipmentPage from './pages/ShipmentPage';
 import PaymentPage from './pages/PaymentPage';
-import OrderPage from './pages/OrderPage';
+import OrderCompletePage from './pages/OrderCompletePage';
+import PrivateRoute from './components/PrivateRoute';
 
 
 function App() {
@@ -32,10 +33,10 @@ function App() {
           <Route path="/about" component={AboutPage} />
           <Route path="/signup" component={SignUpPage} />
           <Route path="/login" component={LogInPage} />
-          <Route path="/cart" component={ShoppingCartPage} />
-          <Route path="/shipment" component={ShipmentPage} />
-          <Route path="/payment" component={PaymentPage} />
-          <Route path="/order" component={OrderPage} />
+          <PrivateRoute path="/cart" component={ShoppingCartPage} />
+          <PrivateRoute path="/shipment" component={ShipmentPage} />
+          <PrivateRoute path="/payment" component={PaymentPage} />
+          <PrivateRoute path="/order-complete" component={OrderCompletePage} />
         </Switch>
         <ToastContainer
           position="top-right"

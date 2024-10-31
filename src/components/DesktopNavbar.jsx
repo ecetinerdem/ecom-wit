@@ -152,7 +152,7 @@ const DesktopNavbar = () => {
                   View Cart
                 </Link>
                 <Link 
-                  to="/checkout" 
+                  to="/cart" 
                   className="bg-[#2DC071] text-white py-2 px-4 rounded text-center hover:bg-[#26A861]"
                   onClick={() => setIsCartHovered(false)}
                 >

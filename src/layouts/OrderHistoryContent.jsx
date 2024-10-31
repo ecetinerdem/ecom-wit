@@ -1,4 +1,3 @@
-// src/layouts/OrderHistoryContent.jsx
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -107,22 +106,27 @@ const OrderHistoryContent = () => {
                         <div className="space-y-2">
                           {order.products.map((product, index) => (
                             <div 
-                              key={`${order.id}-${product.product_id}-${index}`}
+                              key={`${order.id}-${product.id}-${index}`}
                               className="flex justify-between items-center bg-gray-50 p-3 rounded"
                             >
                               <div>
                                 <p className="font-medium">
-                                  Product ID: {product.product_id}
+                                  {product.name}
                                 </p>
-                                {product.detail && (
+                                {product.description && (
                                   <p className="text-sm text-gray-600">
-                                    {product.detail}
+                                    {product.description}
                                   </p>
                                 )}
                               </div>
-                              <p className="text-[#737373] font-semibold">
-                                Quantity: {product.count}
-                              </p>
+                              <div className="text-right">
+                                <p className="text-[#737373] font-semibold">
+                                  Quantity: {product.count}
+                                </p>
+                                <p className="text-[#737373] font-semibold">
+                                  ${product.price.toFixed(2)}
+                                </p>
+                              </div>
                             </div>
                           ))}
                         </div>

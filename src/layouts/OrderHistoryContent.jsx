@@ -66,14 +66,14 @@ const OrderHistoryContent = () => {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <div key={order.id} className="bg-white rounded-lg shadow p-6">
+              <div key={order.id} className="bg-white text-[#23A6F0] rounded-lg shadow p-6">
                 <div 
                   className="flex justify-between items-center cursor-pointer"
                   onClick={() => toggleOrderExpansion(order.id)}
                 >
                   <div>
                     <h2 className="text-xl font-semibold">Order #{order.id}</h2>
-                    <p className="text-gray-600">
+                    <p className="text-[#737373] font-semibold">
                       {format(new Date(order.order_date), 'PPP')}
                     </p>
                   </div>
@@ -94,10 +94,10 @@ const OrderHistoryContent = () => {
                     <div className="space-y-4">
                       <div>
                         <h3 className="font-semibold mb-2">Payment Details</h3>
-                        <p className="text-gray-600">
+                        <p className="text-[#737373] font-semibold">
                           Card holder: {order.card_name}
                         </p>
-                        <p className="text-gray-600">
+                        <p className="text-[#737373] font-semibold">
                           Card number: ****{order.card_no.toString().slice(-4)}
                         </p>
                       </div>
@@ -120,7 +120,7 @@ const OrderHistoryContent = () => {
                                   </p>
                                 )}
                               </div>
-                              <p className="text-gray-600">
+                              <p className="text-[#737373] font-semibold">
                                 Quantity: {product.count}
                               </p>
                             </div>

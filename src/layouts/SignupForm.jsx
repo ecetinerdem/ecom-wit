@@ -5,7 +5,8 @@ import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Create axios instance
+
+// Created an axios instance and ı need to get rid of this
 const api = axios.create({
   baseURL: 'https://workintech-fe-ecommerce.onrender.com'
 });
@@ -24,20 +25,18 @@ const SignupForm = () => {
     reset
   } = useForm({
     defaultValues: {
-      role_id: '' // Ensure it's empty or set to a default that is NOT "Mağaza"
+      role_id: ''
     }
   });
 
-  // Watch role_id for conditional rendering
   const selectedRoleId = watch("role_id");
 
-  // Fetch roles on component mount
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const response = await api.get('/roles');
         setRoles(response.data);
-        console.log('Available roles:', response.data); // Debug log
+        console.log('Available roles:', response.data);
       } catch (err) {
         setError('Failed to fetch roles');
         console.error('Error fetching roles:', err);
@@ -46,7 +45,6 @@ const SignupForm = () => {
     fetchRoles();
   }, []);
 
-  // Debug log for role changes
   useEffect(() => {
     console.log('Selected role ID:', selectedRoleId);
   }, [selectedRoleId]);
@@ -56,14 +54,10 @@ const SignupForm = () => {
     setError('');
 
     try {
-      // Convert role_id to number
       const role_id = Number(data.role_id);
-
-      // Find the role name by role_id
       const selectedRole = roles.find(role => role.id === role_id);
       const roleName = selectedRole?.name;
 
-      // Format data based on role
       const formData = {
         name: data.name,
         email: data.email,
@@ -71,7 +65,6 @@ const SignupForm = () => {
         role_id
       };
 
-      // Add store data if role is "Mağaza"
       if (roleName === 'Mağaza') {
         formData.store = {
           name: data.storeName,
@@ -81,13 +74,12 @@ const SignupForm = () => {
         };
       }
 
-      console.log('Submitting data:', formData); // Debug log
+      console.log('Submitting data:', formData);
       await api.post('/signup', formData);
       reset();
 
-      // Show alert and go back to the previous page
       alert("You need to click the link in your email to activate your account!");
-      history.goBack();  // Go back to the previous page after successful signup
+      history.goBack();
     } catch (err) {
       console.error('Signup error:', err);
       setError(err.response?.data?.message || 'Oops! Something went wrong! Please try again.');
@@ -95,6 +87,8 @@ const SignupForm = () => {
       setIsLoading(false);
     }
   };
+
+  const inputStyles = "w-full p-2 border rounded bg-[#FAFAFA] outline-none focus:border-[#23A6F0] transition-colors";
 
   return (
     <div className="max-w-md mx-auto p-6">
@@ -118,7 +112,7 @@ const SignupForm = () => {
                 message: 'Name must be at least 3 characters'
               }
             })}
-            className="w-full p-2 border rounded"
+            className={inputStyles}
           />
           {errors.name && (
             <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
@@ -137,7 +131,7 @@ const SignupForm = () => {
                 message: 'Invalid email address'
               }
             })}
-            className="w-full p-2 border rounded"
+            className={inputStyles}
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -160,7 +154,7 @@ const SignupForm = () => {
                 message: 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
               }
             })}
-            className="w-full p-2 border rounded"
+            className={inputStyles}
           />
           {errors.password && (
             <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
@@ -180,7 +174,7 @@ const SignupForm = () => {
                 }
               },
             })}
-            className="w-full p-2 border rounded"
+            className={inputStyles}
           />
           {errors.confirmPassword && (
             <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
@@ -192,7 +186,7 @@ const SignupForm = () => {
           <label className="block text-sm text-[#252B42] font-medium mb-1">Role</label>
           <select
             {...register('role_id')}
-            className="w-full p-2 border rounded"
+            className={inputStyles}
           >
             <option value="">Select Role</option>
             {roles.map((role) => (
@@ -217,7 +211,7 @@ const SignupForm = () => {
                     message: 'Store name must be at least 3 characters'
                   }
                 })}
-                className="w-full p-2 border rounded"
+                className={inputStyles}
               />
               {errors.storeName && (
                 <p className="text-red-500 text-sm mt-1">{errors.storeName.message}</p>
@@ -235,7 +229,7 @@ const SignupForm = () => {
                     message: 'Invalid Turkish phone number'
                   }
                 })}
-                className="w-full p-2 border rounded"
+                className={inputStyles}
                 placeholder="+90XXXXXXXXXX"
               />
               {errors.storePhone && (
@@ -254,7 +248,7 @@ const SignupForm = () => {
                     message: 'Invalid Tax ID format (TXXXXVXXXXXX)'
                   }
                 })}
-                className="w-full p-2 border rounded"
+                className={inputStyles}
                 placeholder="TXXXXVXXXXXX"
               />
               {errors.storeTaxId && (
@@ -273,7 +267,7 @@ const SignupForm = () => {
                     message: 'Invalid IBAN format (TR followed by 24 digits)'
                   }
                 })}
-                className="w-full p-2 border rounded"
+                className={inputStyles}
                 placeholder="TRXXXXXXXXXXXXXXXXXXXXXXXX"
               />
               {errors.storeBankAccount && (

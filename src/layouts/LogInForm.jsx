@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { login } from '../store/actions/clientActions';
 import { Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,17 +22,16 @@ const LoginForm = () => {
     try {
       const response = await dispatch(login(email, password, rememberMe));
   
-      // Check if response contains the token or user data
       if (response && response.token) {
-        toast.success('Login successful!'); // Success toast message
+        toast.success('Login successful!');
         history.push('/');
       } else {
         setError('Login failed. Please check your credentials and try again.');
-        toast.error('Login failed. Please check your credentials.'); // Error toast message
+        toast.error('Login failed. Please check your credentials.');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password. Please try again.');
-      toast.error(err.response?.data?.message || 'Invalid email or password.'); // Error toast message
+      toast.error(err.response?.data?.message || 'Invalid email or password.');
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +60,7 @@ const LoginForm = () => {
                 message: 'Invalid email address'
               }
             })}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-[#FAFAFA] outline-none focus:border-[#23A6F0] transition-colors"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -76,7 +75,7 @@ const LoginForm = () => {
             {...register('password', {
               required: 'Password is required'
             })}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-[#FAFAFA] outline-none focus:border-[#23A6F0] transition-colors"
           />
           {errors.password && (
             <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>

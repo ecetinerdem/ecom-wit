@@ -66,6 +66,7 @@ function ProductDetail() {
     }
   };
 
+  // TODO: HOME, SHOP, GENDER, CATEGORY hasto direct to those sections
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <div className="flex space-x-2 mb-6">
